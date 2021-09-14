@@ -1,4 +1,4 @@
-package br.com.zup.edu.desafiopagamentos.formadepagamento;
+package br.com.zup.edu.desafiopagamentos.pagamentos;
 
 import javax.persistence.*;
 
@@ -24,6 +24,14 @@ public class FormaDePagamento {
 
     @Deprecated
     public FormaDePagamento() {
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override

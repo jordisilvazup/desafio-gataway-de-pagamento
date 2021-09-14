@@ -1,6 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.usuarios;
 
-import br.com.zup.edu.desafiopagamentos.formadepagamento.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -20,7 +20,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<FormaDePagamento> formasDePagamento= new ArrayList<>();
 
     public Usuario(String nome, String email, FormaDePagamento formaDePagamento) {
@@ -33,12 +33,8 @@ public class Usuario {
     public Usuario() {
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public List<FormaDePagamento> getFormasDePagamento() {
+        return formasDePagamento;
     }
+
 }

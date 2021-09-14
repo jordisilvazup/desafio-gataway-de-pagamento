@@ -1,6 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.restaurantes;
 
-import br.com.zup.edu.desafiopagamentos.formadepagamento.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<FormaDePagamento> formaDePagamentos=new ArrayList<>();
 
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {
@@ -26,4 +26,8 @@ public class Restaurante {
 
     @Deprecated
     public Restaurante(){}
+
+    public List<FormaDePagamento> getFormaDePagamentos() {
+        return formaDePagamentos;
+    }
 }
