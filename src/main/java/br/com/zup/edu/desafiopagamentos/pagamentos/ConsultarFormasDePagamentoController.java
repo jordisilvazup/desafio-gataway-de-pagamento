@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,18 +27,15 @@ public class ConsultarFormasDePagamentoController {
         this.manager = manager;
     }
 
-    @GetMapping
+    @GetMapping("/forma-de-pagamento")
     @Transactional
     public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid ConsultarFormasDePagamentoEmComumRequest request) {
+
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
 
-         List<FormasDePagamentoResponse> formasDePagamentoEmComum = restaurante.getFormaDePagamentos()
+        List<FormasDePagamentoResponse> formasDePagamentoEmComum = restaurante.meiosDePagamentoPara(usuario)
                 .stream()
-                .filter(formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
-                        .stream()
-                        .anyMatch(formaDePagamentoUsuario-> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante))
-                )
                 .map(FormasDePagamentoResponse::new)
                 .collect(Collectors.toList());
 

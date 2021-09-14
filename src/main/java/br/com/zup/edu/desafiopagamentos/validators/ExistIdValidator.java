@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.validators;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -20,6 +21,7 @@ public class ExistIdValidator implements ConstraintValidator<ExistId,Long> {
 
 
     @Override
+    @Transactional
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
         String existeId="SELECT r FROM "+domainClass+" r WHERE r.id=:id";
         return !manager.createQuery(existeId)

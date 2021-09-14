@@ -1,12 +1,19 @@
 package br.com.zup.edu.desafiopagamentos.restaurantes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
+import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Restaurante {
 
     @Id
@@ -16,7 +23,8 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     private List<FormaDePagamento> formaDePagamentos=new ArrayList<>();
 
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {
@@ -29,5 +37,16 @@ public class Restaurante {
 
     public List<FormaDePagamento> getFormaDePagamentos() {
         return formaDePagamentos;
+    }
+
+    public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario){
+
+        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
+                .stream()
+                .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
+
+        return this.formaDePagamentos.stream()
+                .filter(existeFormaDePagamentoEmComumComUsuario)
+                .collect(Collectors.toList());
     }
 }

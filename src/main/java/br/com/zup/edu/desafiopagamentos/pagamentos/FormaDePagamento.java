@@ -5,6 +5,7 @@ import javax.persistence.*;
 import static javax.persistence.EnumType.*;
 
 @Entity
+@Cacheable
 public class FormaDePagamento {
 
     @Id
@@ -32,6 +33,10 @@ public class FormaDePagamento {
 
     public Long getId() {
         return id;
+    }
+
+    public TipoPagamento getTipo() {
+        return tipo;
     }
 
     @Override
