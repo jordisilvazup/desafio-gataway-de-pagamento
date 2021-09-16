@@ -1,10 +1,11 @@
-package br.com.zup.edu.desafiopagamentos.formadepagamento;
+package br.com.zup.edu.desafiopagamentos.pagamentos;
 
 import javax.persistence.*;
 
 import static javax.persistence.EnumType.*;
 
 @Entity
+@Cacheable
 public class FormaDePagamento {
 
     @Id
@@ -24,6 +25,18 @@ public class FormaDePagamento {
 
     @Deprecated
     public FormaDePagamento() {
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public TipoPagamento getTipo() {
+        return tipo;
     }
 
     @Override
