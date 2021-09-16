@@ -1,6 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
-import br.com.zup.edu.desafiopagamentos.pagamentos.request.ConsultarFormasDePagamentoEmComumRequest;
+import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,7 +28,7 @@ public class ConsultarFormasDePagamentoController {
 
     @GetMapping("/forma-de-pagamento")
     @Transactional
-    public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid ConsultarFormasDePagamentoEmComumRequest request) {
+    public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid FormasDePagamentoEmComumRequest request) {
 
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());

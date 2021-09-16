@@ -1,6 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
-import br.com.zup.edu.desafiopagamentos.pagamentos.request.ConsultarFormasDePagamentoEmComumRequest;
+import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,7 +39,7 @@ class ConsultarFormasDePagamentoControllerTest {
     @Test
     void deveRetornarAsFormasDePagamentoComumEntreUmRestauranteEUsuario() throws Exception {
 
-        ConsultarFormasDePagamentoEmComumRequest requestObject = new ConsultarFormasDePagamentoEmComumRequest(1L, 1L);
+        FormasDePagamentoEmComumRequest requestObject = new FormasDePagamentoEmComumRequest(1L, 1L);
 
         String request = mapper.writeValueAsString(requestObject);
 

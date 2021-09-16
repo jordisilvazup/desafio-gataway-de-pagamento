@@ -5,7 +5,7 @@ import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import br.com.zup.edu.desafiopagamentos.validators.ExistId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ConsultarFormasDePagamentoEmComumRequest {
+public class FormasDePagamentoEmComumRequest {
     @ExistId(domainClass = Usuario.class)
     @JsonProperty
     private Long idUsuario;
@@ -13,7 +13,7 @@ public class ConsultarFormasDePagamentoEmComumRequest {
     @JsonProperty
     private Long idRestaurante;
 
-    public ConsultarFormasDePagamentoEmComumRequest(Long idUsuario, Long idRestaurante) {
+    public FormasDePagamentoEmComumRequest(Long idUsuario, Long idRestaurante) {
         this.idUsuario = idUsuario;
         this.idRestaurante = idRestaurante;
     }
