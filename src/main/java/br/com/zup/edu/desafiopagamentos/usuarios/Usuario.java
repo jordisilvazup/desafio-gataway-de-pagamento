@@ -37,6 +37,10 @@ public class Usuario {
     public Usuario() {
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public List<FormaDePagamento> getFormasDePagamento() {
         return formasDePagamento;
     }
