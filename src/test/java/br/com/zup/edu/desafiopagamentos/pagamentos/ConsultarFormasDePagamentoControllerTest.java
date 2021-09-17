@@ -58,6 +58,28 @@ class ConsultarFormasDePagamentoControllerTest {
                 );
 
     }
+    @Test
+    void deveRetornarAsFormasDePagamentoComumEntreUmRestauranteEUsuarioFraudolento() throws Exception {
+
+        FormasDePagamentoEmComumRequest requestObject = new FormasDePagamentoEmComumRequest(2L, 1L);
+
+        String request = mapper.writeValueAsString(requestObject);
+
+        final String URI = "/api/v1/forma-de-pagamento";
+
+        MockHttpServletRequestBuilder consultaRequest = get(URI).contentType(APPLICATION_JSON).content(request);
+
+        String response = mapper.writeValueAsString(formasDePagamentoEmComumParaFraude());
+
+
+        mockMvc.perform(consultaRequest)
+                .andExpect(
+                        status().isOk()
+                ).andExpect(
+                        content().json(response)
+                );
+
+    }
 
     @Transactional
     List<FormasDePagamentoResponse> formasDePagamentoEmComum() {
@@ -67,6 +89,17 @@ class ConsultarFormasDePagamentoControllerTest {
         formas.add(manager.find(FormaDePagamento.class, 1L));
         formas.add(manager.find(FormaDePagamento.class, 2L));
         formas.add(manager.find(FormaDePagamento.class, 4L));
+
+        return formas.stream().map(FormasDePagamentoResponse::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    List<FormasDePagamentoResponse> formasDePagamentoEmComumParaFraude() {
+
+        List<FormaDePagamento> formas = new ArrayList<>();
+
+        formas.add(manager.find(FormaDePagamento.class, 1L));
+        formas.add(manager.find(FormaDePagamento.class, 2L));
 
         return formas.stream().map(FormasDePagamentoResponse::new).collect(Collectors.toList());
     }

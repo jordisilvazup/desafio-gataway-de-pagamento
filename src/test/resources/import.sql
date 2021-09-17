@@ -28,10 +28,10 @@ insert into restaurante_forma_de_pagamentos values(4,2);
 insert into restaurante_forma_de_pagamentos values(4,1);
 insert into restaurante_forma_de_pagamentos values(5,2);
 
-insert into usuario values (1,'Joao Ferreira Marques','jfmarques@gmail.com');
-insert into usuario values (2,'Fernado Coronel Souza','fernandinhobeiramar@gmail.com');
-insert into usuario values (3,'Gabirel Antenor Silva Souza','gass@gmail.com');
-insert into usuario values (4,'Luiza Maria de Abreu','lma@gmail.com');
+insert into usuario(id,nome,email) values (1,'Joao Ferreira Marques','jfmarques@gmail.com');
+insert into usuario(id,nome,email) values (2,'Fernado Coronel Souza','fernandinhobeiramar@gmail.com');
+insert into usuario(id,nome,email) values (3,'Gabirel Antenor Silva Souza','gass@gmail.com');
+insert into usuario(id,nome,email) values (4,'Luiza Maria de Abreu','lma@gmail.com');
 
 
 insert into usuario_formas_de_pagamento values(1,1);
@@ -53,3 +53,5 @@ insert into usuario_formas_de_pagamento values(4,1);
 insert into usuario_formas_de_pagamento values(4,2);
 insert into usuario_formas_de_pagamento values(4,3);
 insert into usuario_formas_de_pagamento values(4,4);
+
+insert into fraude values (1,'fernandinhobeiramar@gmail.com');
