@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.restaurantes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.TipoPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -39,12 +40,17 @@ public class Restaurante {
         return formaDePagamentos;
     }
 
-    public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario){
+    public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario, boolean ehFraude){
 
         Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
                 .stream()
                 .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
-
+        if(ehFraude){
+           return this.formaDePagamentos.stream()
+                    .filter(existeFormaDePagamentoEmComumComUsuario)
+                    .filter(FormaDePagamento::disponivelOffline)
+                   .collect(Collectors.toList());
+        }
         return this.formaDePagamentos.stream()
                 .filter(existeFormaDePagamentoEmComumComUsuario)
                 .collect(Collectors.toList());
