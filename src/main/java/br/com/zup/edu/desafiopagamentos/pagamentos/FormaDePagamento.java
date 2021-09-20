@@ -40,7 +40,7 @@ public class FormaDePagamento {
     }
 
     public boolean disponivelOffline() {
-        return tipo.disponibilidadeOffline();
+        return tipo.isDisponibilidadeOffline();
     }
 
     @Override
