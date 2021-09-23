@@ -26,7 +26,7 @@ public class Restaurante {
 
     @ManyToMany
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-    private List<FormaDePagamento> formaDePagamentos=new ArrayList<>();
+    private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {
         this.nome = nome;
@@ -34,25 +34,34 @@ public class Restaurante {
     }
 
     @Deprecated
-    public Restaurante(){}
+    public Restaurante() {
+    }
 
     public List<FormaDePagamento> getFormaDePagamentos() {
         return formaDePagamentos;
     }
 
-    public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario, boolean ehFraude){
+    public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario) {
 
         Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
                 .stream()
                 .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
-        if(ehFraude){
-           return this.formaDePagamentos.stream()
-                    .filter(existeFormaDePagamentoEmComumComUsuario)
-                    .filter(FormaDePagamento::disponivelOffline)
-                   .collect(Collectors.toList());
-        }
+
         return this.formaDePagamentos.stream()
                 .filter(existeFormaDePagamentoEmComumComUsuario)
                 .collect(Collectors.toList());
+    }
+
+    public List<FormaDePagamento> meiosDePagamentoParaUsuarioSuspeitoFraude(Usuario usuario) {
+
+        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
+                .stream()
+                .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
+
+        return this.formaDePagamentos.stream()
+                .filter(existeFormaDePagamentoEmComumComUsuario)
+                .filter(FormaDePagamento::disponivelOffline)
+                .collect(Collectors.toList());
+
     }
 }

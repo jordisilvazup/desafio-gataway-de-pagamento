@@ -38,10 +38,15 @@ public class ConsultarFormasDePagamentoController {
 
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
 
+        List<FormaDePagamento> formasDePagamentoEmComum;
 
         boolean existsInFraude = fraudeRepository.existsByEmail(usuario.getEmail());
 
-        List<FormaDePagamento> formasDePagamentoEmComum = restaurante.meiosDePagamentoPara(usuario, existsInFraude);
+        if(existsInFraude){
+            formasDePagamentoEmComum=restaurante.meiosDePagamentoParaUsuarioSuspeitoFraude(usuario);
+        }else{
+            formasDePagamentoEmComum=restaurante.meiosDePagamentoPara(usuario);
+        }
 
         var formasDePagamentoResponses = formasDePagamentoEmComum.stream().map(FormasDePagamentoResponse::new)
                 .collect(Collectors.toList());
