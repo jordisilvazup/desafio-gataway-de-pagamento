@@ -39,6 +39,10 @@ public class FormaDePagamento {
         return tipo;
     }
 
+    public boolean disponivelOffline() {
+        return tipo.isDisponibilidadeOffline();
+    }
+
     @Override
     public String toString() {
         return "FormaDePagamento{" +

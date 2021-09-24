@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.fraude.FraudeRepository;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
@@ -21,23 +22,36 @@ import java.util.stream.Collectors;
 public class ConsultarFormasDePagamentoController {
 
     private final EntityManager manager;
+    private final FraudeRepository fraudeRepository;
 
-    public ConsultarFormasDePagamentoController(EntityManager manager) {
+    public ConsultarFormasDePagamentoController(EntityManager manager, FraudeRepository fraudeRepository) {
         this.manager = manager;
+        this.fraudeRepository = fraudeRepository;
     }
+
 
     @GetMapping("/forma-de-pagamento")
     @Transactional
     public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid FormasDePagamentoEmComumRequest request) {
 
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
+
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
 
-        List<FormasDePagamentoResponse> formasDePagamentoEmComum = restaurante.meiosDePagamentoPara(usuario)
-                .stream()
-                .map(FormasDePagamentoResponse::new)
+        List<FormaDePagamento> formasDePagamentoEmComum;
+
+        boolean existsInFraude = fraudeRepository.existsByEmail(usuario.getEmail());
+
+        if(existsInFraude){
+            formasDePagamentoEmComum=restaurante.meiosDePagamentoParaUsuarioSuspeitoFraude(usuario);
+        }else{
+            formasDePagamentoEmComum=restaurante.meiosDePagamentoPara(usuario);
+        }
+
+        var formasDePagamentoResponses = formasDePagamentoEmComum.stream().map(FormasDePagamentoResponse::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(formasDePagamentoEmComum);
+
+        return ResponseEntity.ok().body(formasDePagamentoResponses);
     }
 }
