@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ConsultarFormasDePagamentoController {
 
     private final EntityManager manager;
+    //1
     private final FraudeRepository fraudeRepository;
 
     public ConsultarFormasDePagamentoController(EntityManager manager, FraudeRepository fraudeRepository) {
@@ -32,6 +33,7 @@ public class ConsultarFormasDePagamentoController {
 
     @GetMapping("/forma-de-pagamento")
     @Transactional
+    //1
     public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid FormasDePagamentoEmComumRequest request) {
 
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
@@ -42,6 +44,7 @@ public class ConsultarFormasDePagamentoController {
 
         boolean existsInFraude = fraudeRepository.existsByEmail(usuario.getEmail());
 
+        //1
         if(existsInFraude){
             formasDePagamentoEmComum=restaurante.meiosDePagamentoParaUsuarioSuspeitoFraude(usuario);
         }else{

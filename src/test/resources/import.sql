@@ -55,3 +55,8 @@ insert into usuario_formas_de_pagamento values(4,3);
 insert into usuario_formas_de_pagamento values(4,4);
 
 insert into fraude values (1,'fernandinhobeiramar@gmail.com');
+
+insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (1,3.5,1,1,1);
+insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (2,2.5,1,1,4);
+insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (3,2.5,1,1,3);
+insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (4,2.5,1,1,2);
