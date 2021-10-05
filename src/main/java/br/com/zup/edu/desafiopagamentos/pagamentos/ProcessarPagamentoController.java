@@ -10,11 +10,11 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/api/v1/pagamentos")
@@ -43,7 +43,9 @@ public class ProcessarPagamentoController {
 
             EntityManager manager = executorTransacional.getManager();
 
-            Transacao  transacao= request.paraTransacao(manager, valorDoPedido.get("valor"));
+            BiFunction<Long,Class<?>,Object> find= (id,classe)-> manager.find(classe,id);
+
+            Transacao  transacao= request.paraTransacao(find, new TentativaDeTransacao(request.getIdPedido(),valorDoPedido.get("valor")));
 
             manager.persist(transacao);
 

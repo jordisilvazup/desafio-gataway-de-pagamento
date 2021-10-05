@@ -1,20 +1,18 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos.request;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.TentativaDeTransacao;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
-import br.com.zup.edu.desafiopagamentos.transacoes.StatusTransacao;
 import br.com.zup.edu.desafiopagamentos.transacoes.Transacao;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import br.com.zup.edu.desafiopagamentos.validators.ExistId;
 import br.com.zup.edu.desafiopagamentos.validators.ExistPedido;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import java.util.function.BiFunction;
+
+import static br.com.zup.edu.desafiopagamentos.transacoes.StatusTransacao.AGUARDANDO_CONFIRMACAO;
 
 public class PagamentoRequest {
     @ExistPedido
@@ -26,11 +24,11 @@ public class PagamentoRequest {
     private Long idRestaurante;
 
     @NotNull
-    @ExistId(domainClass = Restaurante.class)
+    @ExistId(domainClass = Usuario.class)
     private Long idUsuario;
 
     @NotNull
-    @ExistId(domainClass = Restaurante.class)
+    @ExistId(domainClass = FormaDePagamento.class)
     private Long idFormaPagamento;
 
     @JsonProperty
@@ -44,13 +42,24 @@ public class PagamentoRequest {
         this.idFormaPagamento = idFormaPagamento;
     }
 
-    @Transactional
-    public Transacao paraTransacao(EntityManager manager, BigDecimal valor) {
-        Restaurante restaurante = manager.find(Restaurante.class, idRestaurante);
-        Usuario usuario = manager.find(Usuario.class, idUsuario);
-        FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, idUsuario);
 
-        return new Transacao(restaurante,idPedido, valor,StatusTransacao.AGUARDANDO_CONFIRMACAO,formaDePagamento,usuario,informacoesExtras);
+    public Transacao paraTransacao(BiFunction<Long,Class<?>,Object> find,  TentativaDeTransacao tentativaDeTransacao) {
+
+        Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class)
+
+        Usuario usuario = (Usuario) find.apply(idRestaurante, Usuario.class);
+
+        FormaDePagamento formaDePagamento = (FormaDePagamento) find.apply(idRestaurante, FormaDePagamento.class);
+
+        return new Transacao(
+                restaurante,
+                idPedido,
+                tentativaDeTransacao.valorDoPedido(),
+                AGUARDANDO_CONFIRMACAO,
+                formaDePagamento,
+                usuario,
+                informacoesExtras
+        );
 
     }
 
