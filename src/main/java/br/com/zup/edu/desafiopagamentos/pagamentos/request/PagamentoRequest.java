@@ -45,7 +45,7 @@ public class PagamentoRequest {
 
     public Transacao paraTransacao(BiFunction<Long,Class<?>,Object> find,  TentativaDeTransacao tentativaDeTransacao) {
 
-        Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class)
+        Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class);
 
         Usuario usuario = (Usuario) find.apply(idRestaurante, Usuario.class);
 
