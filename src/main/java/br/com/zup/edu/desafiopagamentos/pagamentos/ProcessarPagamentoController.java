@@ -22,11 +22,13 @@ public class ProcessarPagamentoController {
     private final List<Validator> validators;
     private final ExecutorTransacional executorTransacional;
     private final PedidoClient client;
+    private final BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados;
 
     public ProcessarPagamentoController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client) {
         this.validators = validators;
         this.executorTransacional = executorTransacional;
         this.client = client;
+        this.buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
     }
 
     @InitBinder
@@ -43,9 +45,7 @@ public class ProcessarPagamentoController {
 
             EntityManager manager = executorTransacional.getManager();
 
-            BiFunction<Long,Class<?>,Object> find= (id,classe)-> manager.find(classe,id);
-
-            Transacao  transacao= request.paraTransacao(find, new TentativaDeTransacao(request.getIdPedido(),valorDoPedido.get("valor")));
+            Transacao transacao = request.paraTransacao(buscarNoBancoDeDados, new TentativaDeTransacao(request.getIdPedido(), valorDoPedido.get("valor")));
 
             manager.persist(transacao);
 

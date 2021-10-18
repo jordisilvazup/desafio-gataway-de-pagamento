@@ -34,10 +34,7 @@ public class FormaDePagamentoComumValidator implements Validator {
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
 
-        boolean usuarioNaoContemFormaDePagamento = !usuario.getFormasDePagamento().contains(formaDePagamento);
-        boolean restauranteNaoContemFormaDePagamento = !restaurante.getFormaDePagamentos().contains(formaDePagamento);
-
-        if (usuarioNaoContemFormaDePagamento || restauranteNaoContemFormaDePagamento) {
+        if (!usuario.aceita(formaDePagamento) || !restaurante.aceita(formaDePagamento)) {
             errors.rejectValue("idFormaPagamento", null, "O restaurante ou usuario nao possui esta forma de pagamento");
         }
 

@@ -25,7 +25,7 @@ public class Usuario {
 
     @ManyToMany
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-    private List<FormaDePagamento> formasDePagamento = new ArrayList<>();
+    private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
     public Usuario(String nome, String email, FormaDePagamento formaDePagamento) {
         this.nome = nome;
@@ -41,8 +41,12 @@ public class Usuario {
         return email;
     }
 
-    public List<FormaDePagamento> getFormasDePagamento() {
-        return formasDePagamento;
+    public List<FormaDePagamento> getFormaDePagamentos() {
+        return formaDePagamentos;
+    }
+
+    public boolean aceita(FormaDePagamento formaDePagamento){
+        return this.formaDePagamentos.contains(formaDePagamento);
     }
 
 }

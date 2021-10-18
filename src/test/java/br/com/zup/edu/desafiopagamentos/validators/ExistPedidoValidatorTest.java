@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintValidatorContext;
 import java.math.BigDecimal;
 import java.util.Map;
