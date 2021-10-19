@@ -46,7 +46,7 @@ public class Usuario {
     }
 
     public boolean aceita(FormaDePagamento formaDePagamento){
-        return this.formaDePagamentos.contains(formaDePagamento);
+        return this.getFormaDePagamentos().contains(formaDePagamento);
     }
 
 }

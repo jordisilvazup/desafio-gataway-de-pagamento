@@ -1,22 +1,22 @@
 package br.com.zup.edu.desafiopagamentos.validators;
 
-import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
-import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
-import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 public class FormaDePagamentoComumValidator implements Validator {
-    private final EntityManager manager;
 
-    public FormaDePagamentoComumValidator(EntityManager manager) {
-        this.manager = manager;
+    private final List<AceitaFormaDePagmentoValidator> validacoes;
+    private String mensagem;
+
+    public FormaDePagamentoComumValidator(List<AceitaFormaDePagmentoValidator> validacoes) {
+        this.validacoes = validacoes;
     }
 
     @Override
@@ -27,17 +27,26 @@ public class FormaDePagamentoComumValidator implements Validator {
     @Override
     @Transactional
     public void validate(Object o, Errors errors) {
+        this.mensagem="";
+        AtomicBoolean existValidacao = new AtomicBoolean(false);
 
         PagamentoRequest request = (PagamentoRequest) o;
 
-        Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
-        Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
-        FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
+        validacoes.forEach(
+                cliente -> {
+                    String resposta = cliente.aceita(request);
+                    acrescentarRespostaDeValidacao(resposta);
+                    if (!resposta.isBlank())
+                        existValidacao.set(true);
+                }
+        );
 
-        if (!usuario.aceita(formaDePagamento) || !restaurante.aceita(formaDePagamento)) {
-            errors.rejectValue("idFormaPagamento", null, "O restaurante ou usuario nao possui esta forma de pagamento");
-        }
+        if (existValidacao.get())
+            errors.rejectValue("idFormaPagamento", null, mensagem);
 
+    }
 
+    void acrescentarRespostaDeValidacao(String mensagem) {
+        this.mensagem = this.mensagem.concat(mensagem);
     }
 }
