@@ -11,8 +11,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @AutoConfigureMockMvc
+@SpringBootTest
 class ConsultarPedidoControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +31,7 @@ class ConsultarPedidoControllerTest {
 
         mockMvc.perform(requestBuilder)
                 .andExpect(
-                        MockMvcResultMatchers.status().isOk()
+                        status().isOk()
                 );
 
     }

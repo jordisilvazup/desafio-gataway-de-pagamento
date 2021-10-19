@@ -92,7 +92,6 @@ class ConsultarFormasDePagamentoControllerTest {
 
         formas.add(manager.find(FormaDePagamento.class, 1L));
         formas.add(manager.find(FormaDePagamento.class, 2L));
-        formas.add(manager.find(FormaDePagamento.class, 4L));
 
         return formas.stream().map(FormasDePagamentoResponse::new).collect(Collectors.toList());
     }
