@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.validators;
 
 import br.com.zup.edu.desafiopagamentos.pedidos.clients.PedidoClient;
+import feign.FeignException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,7 +19,7 @@ public class ExistPedidoValidator implements ConstraintValidator<ExistPedido,Lon
         try{
             var response=client.consultarPedido(pedido);
         }
-        catch (Exception e){
+        catch (FeignException e){
             return false;
         }
         return true;

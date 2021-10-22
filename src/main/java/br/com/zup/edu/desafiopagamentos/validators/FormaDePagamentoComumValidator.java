@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
@@ -27,26 +28,19 @@ public class FormaDePagamentoComumValidator implements Validator {
     @Override
     @Transactional
     public void validate(Object o, Errors errors) {
-        this.mensagem="";
-        AtomicBoolean existValidacao = new AtomicBoolean(false);
+        this.mensagem = "";
 
         PagamentoRequest request = (PagamentoRequest) o;
 
-        validacoes.forEach(
-                cliente -> {
-                    String resposta = cliente.aceita(request);
-                    acrescentarRespostaDeValidacao(resposta);
-                    if (!resposta.isBlank())
-                        existValidacao.set(true);
-                }
-        );
+        this.mensagem = validacoes.stream()
+                .map(valitador -> valitador.validar(request))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(mensagem, String::concat);
 
-        if (existValidacao.get())
+        if (!mensagem.isBlank())
             errors.rejectValue("idFormaPagamento", null, mensagem);
 
     }
 
-    void acrescentarRespostaDeValidacao(String mensagem) {
-        this.mensagem = this.mensagem.concat(mensagem);
-    }
 }

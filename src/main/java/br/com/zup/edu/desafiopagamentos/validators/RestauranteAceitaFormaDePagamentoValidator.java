@@ -7,28 +7,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Component
 public class RestauranteAceitaFormaDePagamentoValidator implements AceitaFormaDePagmentoValidator {
 
     private final EntityManager manager;
-    private String report = "";
 
     public RestauranteAceitaFormaDePagamentoValidator(EntityManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public String aceita(PagamentoRequest request) {
-        this.report="";
+    public Optional<String> validar(PagamentoRequest request) {
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
         Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
 
         if (!restaurante.aceita(formaDePagamento)) {
-            this.report = this.report.concat("Restaurante não aceita esta forma de pagamento. ");
+            return Optional.of("Restaurante não aceita esta forma de pagamento. ");
         }
 
-        return report;
+        return Optional.empty();
     }
 
 }

@@ -11,11 +11,11 @@ public class ResponseError {
     @JsonProperty
     private List<String> messages = new ArrayList<>();
 
-    public void adicionarPeloFieldError(FieldError fieldError) {
+    public void adicionarError(FieldError fieldError) {
         messages.add(String.format("O %s %s", fieldError.getField(), fieldError.getDefaultMessage()));
     }
 
-    public void adicionarErro(String campo, String mensagem) {
+    public void adicionarError(String campo, String mensagem) {
         messages.add(String.format("O %s %s", campo, mensagem));
     }
 }

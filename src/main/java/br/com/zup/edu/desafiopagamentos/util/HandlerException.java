@@ -19,7 +19,7 @@ public class HandlerException {
 
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
-        fieldErrors.forEach(erros::adicionarPeloFieldError);
+        fieldErrors.forEach(erros::adicionarError);
 
         return ResponseEntity.badRequest().body(erros);
     }

@@ -6,25 +6,25 @@ import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Component
 public class UsuarioAceitaFormaDePagamentoValidator implements AceitaFormaDePagmentoValidator {
     private final EntityManager manager;
-    private String report = "";
+
     public UsuarioAceitaFormaDePagamentoValidator(EntityManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public String aceita(PagamentoRequest request) {
-        this.report="";
+    public Optional<String> validar(PagamentoRequest request) {
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
-//        System.out.println(formaDePagamento.getId());
+
         if (!usuario.aceita(formaDePagamento)) {
-            this.report = this.report.concat("Usuario não aceita esta forma de pagamento. ");
+            return Optional.of("Usuario não aceita esta forma de pagamento. ");
         }
 
-        return report;
+        return Optional.empty();
     }
 }

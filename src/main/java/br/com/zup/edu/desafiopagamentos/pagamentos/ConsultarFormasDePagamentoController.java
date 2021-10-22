@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class ConsultarFormasDePagamentoController {
 
     private final EntityManager manager;
-    //1
     private final FraudeRepository fraudeRepository;
 
     public ConsultarFormasDePagamentoController(EntityManager manager, FraudeRepository fraudeRepository) {
@@ -44,7 +43,6 @@ public class ConsultarFormasDePagamentoController {
 
         boolean existsInFraude = fraudeRepository.existsByEmail(usuario.getEmail());
 
-        //1
         if(existsInFraude){
             formasDePagamentoEmComum=restaurante.meiosDePagamentoParaUsuarioSuspeitoFraude(usuario);
         }else{
