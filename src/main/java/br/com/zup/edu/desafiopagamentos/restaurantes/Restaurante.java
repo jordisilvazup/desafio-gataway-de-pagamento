@@ -1,8 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.restaurantes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
-import br.com.zup.edu.desafiopagamentos.pagamentos.TipoPagamento;
-import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -41,9 +39,13 @@ public class Restaurante {
         return formaDePagamentos;
     }
 
+    public boolean aceita(FormaDePagamento formaDePagamento){
+        return this.formaDePagamentos.contains(formaDePagamento);
+    }
+
     public List<FormaDePagamento> meiosDePagamentoPara(Usuario usuario) {
 
-        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
+        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormaDePagamentos()
                 .stream()
                 .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
 
@@ -54,7 +56,7 @@ public class Restaurante {
 
     public List<FormaDePagamento> meiosDePagamentoParaUsuarioSuspeitoFraude(Usuario usuario) {
 
-        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormasDePagamento()
+        Predicate<FormaDePagamento> existeFormaDePagamentoEmComumComUsuario = formaDePagamentoRestaurante -> usuario.getFormaDePagamentos()
                 .stream()
                 .anyMatch(formaDePagamentoUsuario -> formaDePagamentoUsuario.equals(formaDePagamentoRestaurante));
 

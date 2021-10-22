@@ -32,6 +32,7 @@ public class ConsultarFormasDePagamentoController {
 
     @GetMapping("/forma-de-pagamento")
     @Transactional
+    //1
     public ResponseEntity<?> consultarFormasDePagamentoEmComum(@RequestBody @Valid FormasDePagamentoEmComumRequest request) {
 
         Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());

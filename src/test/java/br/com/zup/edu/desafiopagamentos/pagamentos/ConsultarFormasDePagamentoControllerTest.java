@@ -3,6 +3,7 @@ package br.com.zup.edu.desafiopagamentos.pagamentos;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureDataJpa
 @AutoConfigureMockMvc
+@Transactional
 class ConsultarFormasDePagamentoControllerTest {
 
     @Autowired
@@ -35,6 +37,8 @@ class ConsultarFormasDePagamentoControllerTest {
 
     @PersistenceContext
     private EntityManager manager;
+
+
 
     @Test
     void deveRetornarAsFormasDePagamentoComumEntreUmRestauranteEUsuario() throws Exception {
@@ -88,7 +92,6 @@ class ConsultarFormasDePagamentoControllerTest {
 
         formas.add(manager.find(FormaDePagamento.class, 1L));
         formas.add(manager.find(FormaDePagamento.class, 2L));
-        formas.add(manager.find(FormaDePagamento.class, 4L));
 
         return formas.stream().map(FormasDePagamentoResponse::new).collect(Collectors.toList());
     }

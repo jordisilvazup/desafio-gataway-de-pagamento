@@ -12,7 +12,7 @@ public enum TipoPagamento {
         this.disponibilidadeOffline = disponibilidadeOffline;
     }
 
-    private boolean disponibilidadeOffline;
+    private final boolean disponibilidadeOffline;
 
     public boolean isDisponibilidadeOffline() {
         return this.disponibilidadeOffline;
