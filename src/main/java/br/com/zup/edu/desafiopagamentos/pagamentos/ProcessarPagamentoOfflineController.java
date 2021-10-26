@@ -18,13 +18,13 @@ import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/api/v1/pagamentos")
-public class ProcessarPagamentoController {
+public class ProcessarPagamentoOfflineController {
     private final List<Validator> validators;
     private final ExecutorTransacional executorTransacional;
     private final PedidoClient client;
     private final BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados;
 
-    public ProcessarPagamentoController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client) {
+    public ProcessarPagamentoOfflineController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client) {
         this.validators = validators;
         this.executorTransacional = executorTransacional;
         this.client = client;
@@ -41,17 +41,18 @@ public class ProcessarPagamentoController {
 
         Map<String, BigDecimal> valorDoPedido = client.consultarPedido(request.getIdPedido()).getBody();
 
-        Transacao transacaoDePagamento = executorTransacional.executa(() -> {
+        Pagamento pagamento = executorTransacional.executa(() -> {
 
             EntityManager manager = executorTransacional.getManager();
 
-            Transacao transacao = request.paraTransacao(buscarNoBancoDeDados, new TentativaDeTransacao(request.getIdPedido(), valorDoPedido.get("valor")));
+            Pagamento tentativaDePagamento = request.paraPagamento(buscarNoBancoDeDados, new TentativaDeTransacao(request.getIdPedido(), valorDoPedido.get("valor")));
 
-            manager.persist(transacao);
+            manager.persist(tentativaDePagamento);
 
-            return transacao;
+            return tentativaDePagamento;
+
         });
 
-        return ResponseEntity.ok().body(Map.of("codigoParaContinuarProcessamento", transacaoDePagamento.getCodigoParaConfirmacaoDePagamento()));
+        return ResponseEntity.ok().body(Map.of("codigoParaContinuarProcessamento", pagamento.getCodigoParaConfirmacaoDePagamento()));
     }
 }

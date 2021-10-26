@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.transacoes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.Pagamento;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static br.com.zup.edu.desafiopagamentos.transacoes.StatusTransacao.*;
 
 @Entity
 public class Transacao {
@@ -36,28 +39,39 @@ public class Transacao {
     @JoinColumn(nullable = false)
     private Usuario usuario;
 
-    private String informacoesExtras;
+    @ManyToOne(optional = false)
+    private Pagamento pagamento;
 
-    private String codigoParaConfirmacaoDePagamento= UUID.randomUUID().toString();
 
     private LocalDateTime criadoEm = LocalDateTime.now();
 
-    public Transacao(Restaurante restaurante, Long pedido,BigDecimal valor ,StatusTransacao status, FormaDePagamento formaDePagamento,Usuario usuario ,String informacoesExtras) {
+    public Transacao(Pagamento pagamento,Restaurante restaurante, Long pedido,BigDecimal valor ,StatusTransacao status, FormaDePagamento formaDePagamento,Usuario usuario) {
+        this.pagamento=pagamento;
         this.restaurante = restaurante;
         this.pedido = pedido;
         this.valor=valor;
         this.status = status;
         this.formaDePagamento = formaDePagamento;
         this.usuario=usuario;
-        this.informacoesExtras = informacoesExtras;
     }
 
     @Deprecated
     public Transacao() {
     }
 
+    public void status(StatusTransacao status){
+        this.status=status;
+    }
 
-    public String getCodigoParaConfirmacaoDePagamento() {
-        return codigoParaConfirmacaoDePagamento;
+    public boolean aguardandoConfirmacao() {
+        return status.equals(AGUARDANDO_CONFIRMACAO);
+    }
+
+    public  boolean concluida() {
+        return status.equals(CONCLUIDA);
+    }
+
+    public Transacao copiar(){
+        return new Transacao(pagamento,restaurante,pedido,valor,status,formaDePagamento,usuario);
     }
 }

@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface TransacaoRepository extends JpaRepository<Transacao,Long> {
 
     boolean existsByPedido(Long idPedido);
+
 }
