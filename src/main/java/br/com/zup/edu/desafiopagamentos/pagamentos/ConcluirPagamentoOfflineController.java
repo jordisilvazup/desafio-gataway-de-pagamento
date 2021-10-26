@@ -1,6 +1,5 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
-import br.com.zup.edu.desafiopagamentos.transacoes.Transacao;
 import br.com.zup.edu.desafiopagamentos.util.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class ConcluirPagamentoOfflineController {
             return ResponseEntity.badRequest().body(responseError);
         }
 
-        if (pagamento.naoConcluido()){
+        if (pagamento.concluido()){
             responseError.adicionarError("Pagamento","este pedido já foi pago.");
             return ResponseEntity.badRequest().body(responseError);
         }

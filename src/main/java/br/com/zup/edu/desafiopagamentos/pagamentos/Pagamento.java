@@ -56,7 +56,7 @@ public class Pagamento {
         return this.transacoes.stream().anyMatch(Transacao::aguardandoConfirmacao);
     }
 
-    public boolean naoConcluido() {
+    public boolean concluido() {
         return this.transacoes.stream().anyMatch(Transacao::concluida);
     }
 
