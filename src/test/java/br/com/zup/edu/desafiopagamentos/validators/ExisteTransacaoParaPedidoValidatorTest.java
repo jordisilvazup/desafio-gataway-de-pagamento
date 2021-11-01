@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.validators;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.Pagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
 import br.com.zup.edu.desafiopagamentos.transacoes.StatusTransacao;
@@ -58,14 +59,16 @@ class ExisteTransacaoParaPedidoValidatorTest {
 
     @Test
     void deveExistirUmaTransacaoParaEstePedido() {
+        Pagamento novoPagamento= new Pagamento(null);
+        manager.persist(novoPagamento);
         Transacao transacaoExistente = new Transacao(
+                novoPagamento,
                 restaurante,
                 ID_PEDIDO,
                 new BigDecimal("1.0"),
                 StatusTransacao.AGUARDANDO_CONFIRMACAO,
                 formaDePagamento,
-                usuario,
-                null
+                usuario
         );
 
         transacaoRepository.save(transacaoExistente);

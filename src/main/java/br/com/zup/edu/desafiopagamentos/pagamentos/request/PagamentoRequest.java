@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos.request;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.Pagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.TentativaDeTransacao;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
 import br.com.zup.edu.desafiopagamentos.transacoes.Transacao;
@@ -43,7 +44,7 @@ public class PagamentoRequest {
     }
 
 
-    public Transacao paraTransacao(BiFunction<Long,Class<?>,Object> find,  TentativaDeTransacao tentativaDeTransacao) {
+    public Pagamento paraPagamento(BiFunction<Long, Class<?>, Object> find, TentativaDeTransacao tentativaDeTransacao) {
 
         Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class);
 
@@ -51,16 +52,19 @@ public class PagamentoRequest {
 
         FormaDePagamento formaDePagamento = (FormaDePagamento) find.apply(idRestaurante, FormaDePagamento.class);
 
-        return new Transacao(
+        Pagamento novoPagamento = new Pagamento(informacoesExtras);
+
+        Transacao transacao = new Transacao(
+                novoPagamento,
                 restaurante,
                 idPedido,
                 tentativaDeTransacao.valorDoPedido(),
                 AGUARDANDO_CONFIRMACAO,
                 formaDePagamento,
-                usuario,
-                informacoesExtras
+                usuario
         );
-
+        novoPagamento.associar(transacao);
+        return novoPagamento;
     }
 
     public Long getIdFormaPagamento() {
