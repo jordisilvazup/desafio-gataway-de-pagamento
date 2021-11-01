@@ -65,7 +65,6 @@ public class Pagamento {
 
         Transacao transacao = this.transacoes.stream()
                 .filter(Transacao::aguardandoConfirmacao)
-                .map(Transacao::copiar)
                 .findAny()
                 .get();
 

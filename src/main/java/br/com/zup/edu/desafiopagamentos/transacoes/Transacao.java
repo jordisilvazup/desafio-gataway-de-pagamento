@@ -71,7 +71,5 @@ public class Transacao {
         return status.equals(CONCLUIDA);
     }
 
-    public Transacao copiar(){
-        return new Transacao(pagamento,restaurante,pedido,valor,status,formaDePagamento,usuario);
-    }
+
 }
