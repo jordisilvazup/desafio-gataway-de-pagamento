@@ -11,7 +11,6 @@ public class SaoriClient {
     public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request){
         RestTemplate template= new RestTemplate();
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);
-        System.out.println(ENDERECO);
         ResponseEntity<TentativaPagamentoResponse> response = template.postForEntity(ENDERECO, request, TentativaPagamentoResponse.class);
         return response.getBody();
     }
