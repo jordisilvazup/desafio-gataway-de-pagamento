@@ -45,30 +45,34 @@ public class Transacao {
 
     private LocalDateTime criadoEm = LocalDateTime.now();
 
-    public Transacao(Pagamento pagamento,Restaurante restaurante, Long pedido,BigDecimal valor ,StatusTransacao status, FormaDePagamento formaDePagamento,Usuario usuario) {
-        this.pagamento=pagamento;
+    public Transacao(Pagamento pagamento, Restaurante restaurante, Long pedido, BigDecimal valor, StatusTransacao status, FormaDePagamento formaDePagamento, Usuario usuario) {
+        this.pagamento = pagamento;
         this.restaurante = restaurante;
         this.pedido = pedido;
-        this.valor=valor;
+        this.valor = valor;
         this.status = status;
         this.formaDePagamento = formaDePagamento;
-        this.usuario=usuario;
+        this.usuario = usuario;
     }
 
     @Deprecated
     public Transacao() {
     }
 
-    public void status(StatusTransacao status){
-        this.status=status;
+    public void status(StatusTransacao status) {
+        this.status = status;
     }
 
     public boolean aguardandoConfirmacao() {
         return status.equals(AGUARDANDO_CONFIRMACAO);
     }
 
-    public  boolean concluida() {
+    public boolean concluida() {
         return status.equals(CONCLUIDA);
+    }
+
+    public boolean falha() {
+        return status.equals(FALHA);
     }
 
 

@@ -46,7 +46,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
 
     @BeforeEach
     void setUp() {
-        this.validator = new ExisteTransacaoParaPedidoValidator(transacaoRepository);
+        this.validator = new ExisteTransacaoParaPedidoValidator(transacaoRepository, manager);
         this.usuario = manager.find(Usuario.class, ID_USUARIO);
         this.restaurante = manager.find(Restaurante.class, ID_RESTAURANTE);
         this.formaDePagamento = manager.find(FormaDePagamento.class, ID_FORMA_DE_PAGAMENTO);

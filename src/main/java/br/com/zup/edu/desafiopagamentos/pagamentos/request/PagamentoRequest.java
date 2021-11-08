@@ -32,6 +32,9 @@ public class PagamentoRequest {
     @ExistId(domainClass = FormaDePagamento.class)
     private Long idFormaPagamento;
 
+    private String num_cartao;
+    private String cod_seguranca;
+
     @JsonProperty
     private String informacoesExtras;
 
@@ -44,13 +47,12 @@ public class PagamentoRequest {
     }
 
 
-    public Pagamento paraPagamento(BiFunction<Long, Class<?>, Object> find, TentativaDeTransacao tentativaDeTransacao) {
+    public Pagamento paraPagamentoOffline(BiFunction<Long, Class<?>, Object> find, FormaDePagamento formaDePagamento, TentativaDeTransacao tentativaDeTransacao) {
 
         Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class);
 
         Usuario usuario = (Usuario) find.apply(idRestaurante, Usuario.class);
 
-        FormaDePagamento formaDePagamento = (FormaDePagamento) find.apply(idRestaurante, FormaDePagamento.class);
 
         Pagamento novoPagamento = new Pagamento(informacoesExtras);
 
@@ -65,6 +67,12 @@ public class PagamentoRequest {
         );
         novoPagamento.associar(transacao);
         return novoPagamento;
+    }
+    public Pagamento paraPagamentoOnline() {
+
+
+         return  new Pagamento(informacoesExtras);
+
     }
 
     public Long getIdFormaPagamento() {
@@ -83,5 +91,11 @@ public class PagamentoRequest {
         return idPedido;
     }
 
+    public String getCod_seguranca() {
+        return cod_seguranca;
+    }
 
+    public String getNum_cartao() {
+        return num_cartao;
+    }
 }

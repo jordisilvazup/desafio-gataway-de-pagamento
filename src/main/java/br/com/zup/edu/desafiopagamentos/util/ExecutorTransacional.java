@@ -14,7 +14,7 @@ public class ExecutorTransacional {
         this.manager = manager;
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public <T> T executa(Supplier<T> codigo){
         return codigo.get();
     }
