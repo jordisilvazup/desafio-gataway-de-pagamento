@@ -6,7 +6,9 @@ import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoRespo
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -15,7 +17,7 @@ import java.util.Optional;
 import static br.com.zup.edu.desafiopagamentos.gateways.clients.StatusPagamento.SUCESSO;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(SpringExtension.class)
 class RealizarPagamentoSaoriTest {
 
     private RealizarPagamentoSaori realizarPagamento;
