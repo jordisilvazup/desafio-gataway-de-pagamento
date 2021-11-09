@@ -16,14 +16,14 @@ import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/api/v1/pagamentos")
-public class ProcessarPagamentoOfflineController {
+public class ProcessarPagamentoController {
     private final List<Validator> validators;
     private final ExecutorTransacional executorTransacional;
     private final PedidoClient client;
     private final ProcessarPagamentoOnlineService processarPagamentoOnlineService;
     private final BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados;
 
-    public ProcessarPagamentoOfflineController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client, ProcessarPagamentoOnlineService processarPagamentoOnlineService) {
+    public ProcessarPagamentoController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client, ProcessarPagamentoOnlineService processarPagamentoOnlineService) {
         this.validators = validators;
         this.executorTransacional = executorTransacional;
         this.client = client;
@@ -43,19 +43,15 @@ public class ProcessarPagamentoOfflineController {
         BigDecimal valorPedido = valorDoPedido.get("valor");
 
         FormaDePagamento formaDePagamento = executorTransacional.executa(() -> executorTransacional.getManager().find(FormaDePagamento.class, request.getIdFormaPagamento()));
-        return formaDePagamento.getTipo().processarPagamento().processar(buscarNoBancoDeDados, valorPedido, request, formaDePagamento, executorTransacional,processarPagamentoOnlineService);
-//        Pagamento pagamento = executorTransacional.executa(() -> {
-//
-//            EntityManager manager = executorTransacional.getManager();
-//
-//            Pagamento tentativaDePagamento = request.paraPagamentoOffline(buscarNoBancoDeDados, new TentativaDeTransacao(request.getIdPedido(), valorDoPedido.get("valor")));
-//
-//            manager.persist(tentativaDePagamento);
-//
-//            return tentativaDePagamento;
-//
-//        });
 
-//        return ResponseEntity.ok().body(Map.of("codigoParaContinuarProcessamento", pagamento.getCodigoParaConfirmacaoDePagamento()));
+        return formaDePagamento.getTipo()
+                .processarPagamento()
+                .processar(buscarNoBancoDeDados,
+                        valorPedido,
+                        request,
+                        formaDePagamento,
+                        executorTransacional,
+                        processarPagamentoOnlineService);
+
     }
 }

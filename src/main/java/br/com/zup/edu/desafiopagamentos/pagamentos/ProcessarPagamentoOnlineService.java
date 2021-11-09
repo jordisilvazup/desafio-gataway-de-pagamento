@@ -56,6 +56,7 @@ public class ProcessarPagamentoOnlineService {
         });
 
         while (!gatewaysPorMenorCusto.isEmpty()) {
+
             Gateway gateway = gatewaysPorMenorCusto.get(0);
 
 

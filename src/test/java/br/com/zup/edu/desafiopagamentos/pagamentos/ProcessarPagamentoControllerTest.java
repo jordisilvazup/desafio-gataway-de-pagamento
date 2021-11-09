@@ -24,7 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @SpringBootTest
 @AutoConfigureDataJpa
 @AutoConfigureMockMvc
-class ProcessarPagamentoOfflineControllerTest {
+class ProcessarPagamentoControllerTest {
     @Autowired
     private ObjectMapper mapper;
     @Autowired
