@@ -4,12 +4,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-public class SeyaClient{
+public class SeyaClient {
 
-    private String ENDERECO_BASE="http://localhost:8080/api/seya";
+    private RestTemplate template = new RestTemplate();
 
-    public VerificacaoDeCartaoResponse verificaCartao(PaymentExternalRequest request){
-        RestTemplate template= new RestTemplate();
+    private String ENDERECO_BASE = "http://localhost:8080/api/seya";
+
+    public VerificacaoDeCartaoResponse verificaCartao(PaymentExternalRequest request) {
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);
         String endereco = ENDERECO_BASE + "/verify";
         ResponseEntity<VerificacaoDeCartaoResponse> response = template.postForEntity(endereco, payload, VerificacaoDeCartaoResponse.class);
@@ -17,10 +18,9 @@ public class SeyaClient{
     }
 
 
-    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request,  String id){
-        RestTemplate template= new RestTemplate();
+    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request, String id) {
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);
-        String endereco = ENDERECO_BASE +"/"+id+ "/payment";
+        String endereco = ENDERECO_BASE + "/" + id + "/payment";
         ResponseEntity<TentativaPagamentoResponse> response = template.postForEntity(endereco, payload, TentativaPagamentoResponse.class);
         return response.getBody();
     }

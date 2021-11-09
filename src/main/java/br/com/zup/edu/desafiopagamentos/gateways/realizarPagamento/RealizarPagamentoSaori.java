@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class RealizarPagamentoSaori implements RealizarPagamento {
 
-    private final SaoriClient client = new SaoriClient();
+    private SaoriClient client = new SaoriClient();
 
 
     @Override
@@ -23,7 +23,7 @@ public class RealizarPagamentoSaori implements RealizarPagamento {
         try {
 
             PaymentExternalRequest paymentExternalRequest = new PaymentExternalRequest(request);
-            paymentExternalRequest.setValor_compra(valorCompra);
+            paymentExternalRequest.setValorCompra(valorCompra);
 
             tentativaPagamentoResponse = client.realizarPagamento(paymentExternalRequest);
 
@@ -38,4 +38,7 @@ public class RealizarPagamentoSaori implements RealizarPagamento {
 
     }
 
+    public void setClient(SaoriClient client) {
+        this.client = client;
+    }
 }

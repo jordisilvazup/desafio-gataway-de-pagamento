@@ -1,25 +1,23 @@
 package br.com.zup.edu.desafiopagamentos.gateways.realizarPagamento;
 
-import br.com.zup.edu.desafiopagamentos.gateways.clients.PaymentExternalRequest;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.SaoriClient;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static br.com.zup.edu.desafiopagamentos.gateways.clients.StatusPagamento.SUCESSO;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-@ExtendWith(SpringExtension.class)
-class RealizarPagamentoSaoriTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+class RealizarPagamentoSaoriTest {
     private RealizarPagamentoSaori realizarPagamento;
     private SaoriClient clientMock = mock(SaoriClient.class);
     private Long ID_FORMA_PAGAMENTO = 4L;
@@ -33,26 +31,33 @@ class RealizarPagamentoSaoriTest {
     @BeforeEach
     void setUp() {
         this.realizarPagamento = new RealizarPagamentoSaori();
-        this.pagamentoRequest= new PagamentoRequest(ID_PEDIDO, ID_RESTAURANTE, ID_USUARIO, ID_FORMA_PAGAMENTO);
-        this.valorPedido=new BigDecimal("24.5");
+        this.pagamentoRequest = new PagamentoRequest(ID_PEDIDO, ID_RESTAURANTE, ID_USUARIO, ID_FORMA_PAGAMENTO);
+        this.valorPedido = new BigDecimal("24.5");
+        realizarPagamento.setClient(clientMock);
     }
 
     @Test
     void deveRealizarOPagamento() {
-        PaymentExternalRequest request = new PaymentExternalRequest(pagamentoRequest);
 
-        request.setValor_compra(valorPedido);
 
-        TentativaPagamentoResponse respostaSucesso=new TentativaPagamentoResponse("Pagamento realizado com Saori.", SUCESSO);
+        TentativaPagamentoResponse respostaSucesso = new TentativaPagamentoResponse("Pagamento realizado com Saori.", SUCESSO);
 
-        when(clientMock.realizarPagamento(request)).thenReturn(respostaSucesso);
-
-        ReflectionTestUtils.setField(realizarPagamento,"client",clientMock);
+        when(clientMock.realizarPagamento(any())).thenReturn(respostaSucesso);
 
         Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
 
         assertTrue(possivelTentativaDePagamento.isPresent());
-        assertEquals(respostaSucesso,possivelTentativaDePagamento.get());
+        assertEquals(respostaSucesso, possivelTentativaDePagamento.get());
+    }
+
+    @Test
+    void naoDeveRealizarOPagamento() {
+
+        when(clientMock.realizarPagamento(any())).thenThrow(ResourceAccessException.class);
+
+        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
+
+        assertTrue(possivelTentativaDePagamento.isEmpty());
     }
 
 }

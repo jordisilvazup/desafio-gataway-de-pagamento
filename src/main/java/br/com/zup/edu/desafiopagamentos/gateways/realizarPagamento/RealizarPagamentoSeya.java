@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class RealizarPagamentoSeya implements RealizarPagamento {
 
-    private final SeyaClient client=new SeyaClient();
+    private SeyaClient client = new SeyaClient();
 
 
     @Override
@@ -25,7 +25,7 @@ public class RealizarPagamentoSeya implements RealizarPagamento {
 
             PaymentExternalRequest paymentExternalRequest = new PaymentExternalRequest(request);
             VerificacaoDeCartaoResponse verificacaoCartao = client.verificaCartao(paymentExternalRequest);
-            paymentExternalRequest.setValor_compra(valorCompra);
+            paymentExternalRequest.setValorCompra(valorCompra);
             String id = verificacaoCartao.getId();
 
             tentativaPagamentoResponse = client.realizarPagamento(paymentExternalRequest, id);
@@ -38,5 +38,9 @@ public class RealizarPagamentoSeya implements RealizarPagamento {
         return Optional.of(tentativaPagamentoResponse);
 
 
+    }
+
+    public void setClient(SeyaClient client) {
+        this.client = client;
     }
 }

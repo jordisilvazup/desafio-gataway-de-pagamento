@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class RealizarPagamentoTango implements RealizarPagamento {
 
-    private final TangoClient client=new TangoClient();
+    private TangoClient client = new TangoClient();
 
 
     @Override
@@ -23,7 +23,7 @@ public class RealizarPagamentoTango implements RealizarPagamento {
         try {
 
             PaymentExternalRequest paymentExternalRequest = new PaymentExternalRequest(request);
-            paymentExternalRequest.setValor_compra(valorCompra);
+            paymentExternalRequest.setValorCompra(valorCompra);
 
             tentativaPagamentoResponse = client.realizarPagamento(paymentExternalRequest);
 
@@ -35,5 +35,9 @@ public class RealizarPagamentoTango implements RealizarPagamento {
         return Optional.of(tentativaPagamentoResponse);
 
 
+    }
+
+    public void setClient(TangoClient client) {
+        this.client = client;
     }
 }
