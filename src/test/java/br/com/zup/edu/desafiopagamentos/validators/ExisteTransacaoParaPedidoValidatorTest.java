@@ -37,7 +37,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
     private Restaurante restaurante;
     private FormaDePagamento formaDePagamento;
     private Usuario usuario;
-    private final static Long ID_PEDIDO = 1L;
+    private final static Long ID_PEDIDO = 2L;
     private final static Long ID_RESTAURANTE = 1L;
     private final static Long ID_FORMA_DE_PAGAMENTO = 1L;
     private final static Long ID_USUARIO = 1L;
