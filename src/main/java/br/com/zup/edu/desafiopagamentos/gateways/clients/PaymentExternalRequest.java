@@ -7,24 +7,24 @@ import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 public class PaymentExternalRequest {
-    @JsonProperty
+    @JsonProperty("num_cartao")
     @NotBlank
-    private String num_cartao;
-    @JsonProperty
+    private String numCartao;
+    @JsonProperty("codigo_seguranca")
     @NotBlank
-    private String codigo_seguranca;
-    @JsonProperty
-    private BigDecimal valor_compra;
+    private String codigoSeguranca;
+    @JsonProperty("valor_compra")
+    private BigDecimal valorCompra;
 
     public PaymentExternalRequest(PagamentoRequest pagamentoRequest){
-        this.num_cartao= pagamentoRequest.getNum_cartao();
-        this.codigo_seguranca= pagamentoRequest.getCod_seguranca();
+        this.numCartao= pagamentoRequest.getNumCartao();
+        this.codigoSeguranca= pagamentoRequest.getCodSeguranca();
     }
 
     public PaymentExternalRequest() {
     }
 
-    public void setValor_compra(BigDecimal valor_compra) {
-        this.valor_compra = valor_compra;
+    public void setValorCompra(BigDecimal valorCompra) {
+        this.valorCompra = valorCompra;
     }
 }

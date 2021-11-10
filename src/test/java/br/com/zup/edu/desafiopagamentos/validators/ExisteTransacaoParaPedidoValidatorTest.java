@@ -72,6 +72,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
         );
 
         transacaoRepository.save(transacaoExistente);
+        novoPagamento.associar(transacaoExistente);
 
         PagamentoRequest request= new PagamentoRequest(ID_PEDIDO,ID_RESTAURANTE,ID_USUARIO,ID_FORMA_DE_PAGAMENTO);
 

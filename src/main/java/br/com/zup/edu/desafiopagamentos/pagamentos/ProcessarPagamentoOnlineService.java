@@ -19,27 +19,22 @@ import java.util.function.BiFunction;
 @Service
 public class ProcessarPagamentoOnlineService {
     private final GatewayRepository repository;
-    private final ExecutorTransacional executorTransacional;
-    private final BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados;
 
-
-    public ProcessarPagamentoOnlineService(GatewayRepository repository, ExecutorTransacional executorTransacional) {
+    public ProcessarPagamentoOnlineService(GatewayRepository repository) {
         this.repository = repository;
-        this.executorTransacional = executorTransacional;
-        this.buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
     }
 
 
-    public ResponseEntity<?> realizarPagamento(PagamentoRequest request, BigDecimal valorPedido) {
+    public ResponseEntity<?> realizarPagamento(PagamentoRequest request, BigDecimal valorPedido, ExecutorTransacional executorTransacional) {
 
-        EntityManager manager = executorTransacional.getManager();
+        BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
 
         List<Gateway> gatewaysPorMenorCusto = gatewaysPorMenorCusto(valorPedido);
 
 
         Pagamento pagamento = request.paraPagamentoOnline();
 
-        pagamento(request, valorPedido, manager, gatewaysPorMenorCusto, pagamento);
+        pagamento(request, valorPedido, gatewaysPorMenorCusto, pagamento, executorTransacional, buscarNoBancoDeDados);
 
         if (pagamento.naoProcessado()) {
             return ResponseEntity.status(402).build();
@@ -48,7 +43,8 @@ public class ProcessarPagamentoOnlineService {
         return ResponseEntity.ok().build();
     }
 
-    private void pagamento(PagamentoRequest request, BigDecimal valorPedido, EntityManager manager, List<Gateway> gatewaysPorMenorCusto, Pagamento pagamento) {
+    private void pagamento(PagamentoRequest request, BigDecimal valorPedido, List<Gateway> gatewaysPorMenorCusto, Pagamento pagamento, ExecutorTransacional executorTransacional, BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados) {
+        EntityManager manager = executorTransacional.getManager();
 
         executorTransacional.executa(() -> {
             manager.persist(pagamento);
@@ -59,9 +55,7 @@ public class ProcessarPagamentoOnlineService {
 
             Gateway gateway = gatewaysPorMenorCusto.get(0);
 
-
             Optional<TentativaPagamentoResponse> possivelTentativaPagamentoResponse = gateway.realizarPagamento(request, valorPedido);
-
 
             if (possivelTentativaPagamentoResponse.isPresent()) {
                 TentativaPagamentoResponse tentativaPagamentoResponse = possivelTentativaPagamentoResponse.get();
@@ -86,9 +80,9 @@ public class ProcessarPagamentoOnlineService {
         List<Gateway> gateways = repository.findAll();
 
         Comparator<Gateway> gatewayComparator = (o1, o2) -> {
-            BigDecimal g1 = o1.getNome().taxaPagamento().taxa(valor);
-            BigDecimal g2 = o2.getNome().taxaPagamento().taxa(valor);
-            return g2.compareTo(g1);
+            BigDecimal g1 = o1.taxa(valor);
+            BigDecimal g2 = o2.taxa(valor);
+            return g1.compareTo(g2);
         };
 
         gateways.sort(gatewayComparator);

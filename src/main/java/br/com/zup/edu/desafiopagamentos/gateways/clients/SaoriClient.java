@@ -6,12 +6,13 @@ import org.springframework.web.client.RestTemplate;
 
 
 public class SaoriClient {
-    private  String ENDERECO="http://localhost:8080/api/saori/payment";
+    private RestTemplate template = new RestTemplate();
+    private String ENDERECO = "http://localhost:8080/api/saori/payment";
 
-    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request){
-        RestTemplate template= new RestTemplate();
+    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request) {
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);
-        ResponseEntity<TentativaPagamentoResponse> response = template.postForEntity(ENDERECO, request, TentativaPagamentoResponse.class);
+        ResponseEntity<TentativaPagamentoResponse> response = template.postForEntity(ENDERECO, payload, TentativaPagamentoResponse.class);
         return response.getBody();
     }
+
 }

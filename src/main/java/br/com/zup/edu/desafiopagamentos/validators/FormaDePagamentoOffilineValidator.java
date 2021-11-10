@@ -37,7 +37,7 @@ public class FormaDePagamentoOffilineValidator implements Validator {
 
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
 
-        if(!formaDePagamento.disponivelOffline() && !formaDePagamento.getTipo().equals(CARTAO)){
+        if(!formaDePagamento.disponivelOffline() && isNull(request.getNumCartao()) && isNull(request.getCodSeguranca())){
             errors.rejectValue("idFormaPagamento",null,"A forma de pagamento escolhida não é offline.");
         }
 

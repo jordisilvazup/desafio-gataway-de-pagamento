@@ -21,13 +21,11 @@ public class ProcessarPagamentoController {
     private final ExecutorTransacional executorTransacional;
     private final PedidoClient client;
     private final ProcessarPagamentoOnlineService processarPagamentoOnlineService;
-    private final BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados;
 
     public ProcessarPagamentoController(List<Validator> validators, ExecutorTransacional executorTransacional, PedidoClient client, ProcessarPagamentoOnlineService processarPagamentoOnlineService) {
         this.validators = validators;
         this.executorTransacional = executorTransacional;
         this.client = client;
-        this.buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
         this.processarPagamentoOnlineService = processarPagamentoOnlineService;
     }
 
@@ -44,14 +42,9 @@ public class ProcessarPagamentoController {
 
         FormaDePagamento formaDePagamento = executorTransacional.executa(() -> executorTransacional.getManager().find(FormaDePagamento.class, request.getIdFormaPagamento()));
 
-        return formaDePagamento.getTipo()
-                .processarPagamento()
-                .processar(buscarNoBancoDeDados,
-                        valorPedido,
-                        request,
-                        formaDePagamento,
-                        executorTransacional,
-                        processarPagamentoOnlineService);
+        ProcessaPagamento processaPagamento = new ProcessaPagamento(valorPedido,request,formaDePagamento);
+
+        return formaDePagamento.processarPagamento(processaPagamento,executorTransacional,processarPagamentoOnlineService);
 
     }
 }

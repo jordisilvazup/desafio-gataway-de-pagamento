@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import java.util.Objects;
 
 import static br.com.zup.edu.desafiopagamentos.pagamentos.TipoPagamento.CARTAO;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Component
@@ -34,18 +33,19 @@ public class FormaDePagamentoOnlineValidator implements Validator {
     public void validate(Object o, Errors errors) {
 
         PagamentoRequest request = (PagamentoRequest) o;
+
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
 
-        if (formaDePagamento.disponivelOffline() && nonNull(request.getNum_cartao()) && nonNull(request.getCod_seguranca())) {
+        if (formaDePagamento.disponivelOffline() && nonNull(request.getNumCartao()) && nonNull(request.getCodSeguranca())) {
             errors.rejectValue("idFormaPagamento", null, "A forma de pagamento escolhida não é online.");
         } else if (formaDePagamento.getTipo().equals(CARTAO)) {
-            if (Objects.isNull(request.getCod_seguranca())) {
+            if (Objects.isNull(request.getCodSeguranca())) {
 
-                errors.rejectValue("cod_seguranca", null, "O codigo de segurança não deve ser vazio.");
+                errors.rejectValue("codSeguranca", null, "O codigo de segurança não deve ser vazio.");
             }
-            if (Objects.isNull(request.getNum_cartao())) {
+            if (Objects.isNull(request.getNumCartao())) {
 
-                errors.rejectValue("cod_seguranca", null, "O numero do cartao não deve ser vazio.");
+                errors.rejectValue("numCartao", null, "O numero do cartao não deve ser vazio.");
             }
         }
 

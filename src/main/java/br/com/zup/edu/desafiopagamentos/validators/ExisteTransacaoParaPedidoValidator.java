@@ -30,7 +30,7 @@ public class ExisteTransacaoParaPedidoValidator implements Validator {
         PagamentoRequest request = (PagamentoRequest) o;
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
 
-        if (!formaDePagamento.disponivelOffline()) {
+        if (formaDePagamento.disponivelOffline()) {
 
             boolean exist = repository.existsByPedido(request.getIdPedido());
             if (exist) {

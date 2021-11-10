@@ -31,4 +31,8 @@ public class Gateway {
     public Optional<TentativaPagamentoResponse> realizarPagamento(PagamentoRequest request, BigDecimal valorCompra){
         return nome.realizarPagamento().realizarPagamento(request,valorCompra);
     }
+
+    public BigDecimal taxa(BigDecimal valor){
+        return this.getNome().taxaPagamento.taxa(valor);
+    }
 }

@@ -1,5 +1,8 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.util.ExecutorTransacional;
+import org.springframework.http.ResponseEntity;
+
 import javax.persistence.*;
 
 import static javax.persistence.EnumType.*;
@@ -27,6 +30,9 @@ public class FormaDePagamento {
     public FormaDePagamento() {
     }
 
+    public ResponseEntity<?> processarPagamento(ProcessaPagamento request, ExecutorTransacional executorTransacional,ProcessarPagamentoOnlineService processarPagamentoOnlineService){
+        return this.getTipo().processarPagamento().processar(request,executorTransacional,processarPagamentoOnlineService);
+    }
     public String getDescricao() {
         return descricao;
     }

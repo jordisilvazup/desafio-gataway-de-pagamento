@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class TangoClient {
-    private String ENDERECO="http://localhost:8080/api/tango/payment";
+    private RestTemplate template = new RestTemplate();
+    private String ENDERECO = "http://localhost:8080/api/tango/payment";
 
 
-    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request){
-        RestTemplate template = new RestTemplate();
+    public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request) {
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);
         ResponseEntity<TentativaPagamentoResponse> response = template.postForEntity(ENDERECO, payload, TentativaPagamentoResponse.class);
         return response.getBody();
     }
+
 }
