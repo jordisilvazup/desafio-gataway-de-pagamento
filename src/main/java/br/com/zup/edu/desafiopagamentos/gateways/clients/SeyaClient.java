@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class SeyaClient {
 
-    private RestTemplate template = new RestTemplate();
+    private RestTemplate template = GatewayClientFactory.getRestTemplate();
 
     private String ENDERECO_BASE = "http://localhost:8080/api/seya";
 
