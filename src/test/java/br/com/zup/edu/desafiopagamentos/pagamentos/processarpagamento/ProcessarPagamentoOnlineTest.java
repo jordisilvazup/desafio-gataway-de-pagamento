@@ -47,14 +47,14 @@ class ProcessarPagamentoOnlineTest {
 
     @Test
     void deveProcessarUmPagamentoOnline() {
-        when(service.realizarPagamento(pagamentoRequest, valorPedido, execTransacional)).thenReturn(ok().build());
+        when(service.realizarPagamento(processaPagamento, execTransacional)).thenReturn(ok().build());
         ResponseEntity<?> processar = processarPagamentoOnline.processar(processaPagamento, execTransacional, service);
         assertEquals(ok().build(), processar);
     }
 
     @Test
     void naoDeveProcessarUmPagamentoOnline() {
-        when(service.realizarPagamento(pagamentoRequest, valorPedido, execTransacional)).thenReturn(unprocessableEntity().build());
+        when(service.realizarPagamento(processaPagamento, execTransacional)).thenReturn(unprocessableEntity().build());
         ResponseEntity<?> processar = processarPagamentoOnline.processar(processaPagamento, execTransacional, service);
         assertEquals(unprocessableEntity().build(), processar);
     }

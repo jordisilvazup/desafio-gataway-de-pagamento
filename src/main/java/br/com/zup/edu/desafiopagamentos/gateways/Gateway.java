@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.gateways;
 
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
+import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessaPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 
 import javax.persistence.*;
@@ -28,8 +29,8 @@ public class Gateway {
         return nome;
     }
 
-    public Optional<TentativaPagamentoResponse> realizarPagamento(PagamentoRequest request, BigDecimal valorCompra){
-        return nome.realizarPagamento().realizarPagamento(request,valorCompra);
+    public Optional<TentativaPagamentoResponse> realizarPagamento(ProcessaPagamento processaPagamento){
+        return nome.realizarPagamento().realizarPagamento(processaPagamento);
     }
 
     public BigDecimal taxa(BigDecimal valor){

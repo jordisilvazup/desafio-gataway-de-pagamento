@@ -2,6 +2,8 @@ package br.com.zup.edu.desafiopagamentos.gateways.realizarPagamento;
 
 import br.com.zup.edu.desafiopagamentos.gateways.clients.SaoriClient;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
+import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessaPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ class RealizarPagamentoSaoriTest {
     private Long ID_PEDIDO = 1L;
     private PagamentoRequest pagamentoRequest;
     private BigDecimal valorPedido;
+    private ProcessaPagamento processaPagamento;
 
 
     @BeforeEach
@@ -33,6 +36,8 @@ class RealizarPagamentoSaoriTest {
         this.realizarPagamento = new RealizarPagamentoSaori();
         this.pagamentoRequest = new PagamentoRequest(ID_PEDIDO, ID_RESTAURANTE, ID_USUARIO, ID_FORMA_PAGAMENTO);
         this.valorPedido = new BigDecimal("24.5");
+        FormaDePagamento formaDePagamento=mock(FormaDePagamento.class);
+        this.processaPagamento= new ProcessaPagamento(valorPedido,pagamentoRequest,formaDePagamento);
         realizarPagamento.setClient(clientMock);
     }
 
@@ -44,7 +49,7 @@ class RealizarPagamentoSaoriTest {
 
         when(clientMock.realizarPagamento(any())).thenReturn(respostaSucesso);
 
-        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
+        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(processaPagamento);
 
         assertTrue(possivelTentativaDePagamento.isPresent());
         assertEquals(respostaSucesso, possivelTentativaDePagamento.get());
@@ -55,7 +60,7 @@ class RealizarPagamentoSaoriTest {
 
         when(clientMock.realizarPagamento(any())).thenThrow(ResourceAccessException.class);
 
-        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
+        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(processaPagamento);
 
         assertTrue(possivelTentativaDePagamento.isEmpty());
     }

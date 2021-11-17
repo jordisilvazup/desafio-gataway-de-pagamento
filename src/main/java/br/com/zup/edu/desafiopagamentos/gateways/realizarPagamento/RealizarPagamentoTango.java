@@ -3,6 +3,7 @@ package br.com.zup.edu.desafiopagamentos.gateways.realizarPagamento;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.PaymentExternalRequest;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TangoClient;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
+import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessaPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 
 import java.math.BigDecimal;
@@ -15,8 +16,9 @@ public class RealizarPagamentoTango implements RealizarPagamento {
 
 
     @Override
-    public Optional<TentativaPagamentoResponse> realizarPagamento(PagamentoRequest request, BigDecimal valorCompra) {
-
+    public Optional<TentativaPagamentoResponse> realizarPagamento(ProcessaPagamento processaPagamento) {
+        PagamentoRequest request= processaPagamento.getPagamentoRequest();
+        BigDecimal valorCompra=processaPagamento.getValorPedido();
         TentativaPagamentoResponse tentativaPagamentoResponse;
 
 

@@ -4,9 +4,12 @@ import br.com.zup.edu.desafiopagamentos.gateways.clients.SaoriClient;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.SeyaClient;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.VerificacaoDeCartaoResponse;
+import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessaPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigDecimal;
@@ -27,13 +30,17 @@ class RealizarPagamentoSeyaTest {
     private Long ID_PEDIDO = 1L;
     private PagamentoRequest pagamentoRequest;
     private BigDecimal valorPedido;
+    private ProcessaPagamento processaPagamento;
 
     @BeforeEach
     void setUp() {
         this.realizarPagamento = new RealizarPagamentoSeya();
         this.pagamentoRequest = new PagamentoRequest(ID_PEDIDO, ID_RESTAURANTE, ID_USUARIO, ID_FORMA_PAGAMENTO);
         this.valorPedido = new BigDecimal("24.5");
-        realizarPagamento.setClient(clientMock);
+        FormaDePagamento formaDePagamento=mock(FormaDePagamento.class);
+        this.processaPagamento= new ProcessaPagamento(valorPedido,pagamentoRequest,formaDePagamento);
+//        realizarPagamento.setClient(clientMock);
+        ReflectionTestUtils.setField(realizarPagamento,"client",clientMock);
     }
 
     @Test
@@ -47,7 +54,7 @@ class RealizarPagamentoSeyaTest {
         when(clientMock.realizarPagamento(any(), any())).thenReturn(respostaSucesso);
 
 
-        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
+        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(processaPagamento);
 
         assertTrue(possivelTentativaDePagamento.isPresent());
         assertEquals(respostaSucesso, possivelTentativaDePagamento.get());
@@ -60,7 +67,7 @@ class RealizarPagamentoSeyaTest {
 
         when(clientMock.verificaCartao(any())).thenThrow(ResourceAccessException.class);
 
-        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(pagamentoRequest, valorPedido);
+        Optional<TentativaPagamentoResponse> possivelTentativaDePagamento = realizarPagamento.realizarPagamento(processaPagamento);
 
         assertTrue(possivelTentativaDePagamento.isEmpty());
 

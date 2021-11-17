@@ -18,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +32,15 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.ResponseEntity.*;
 
 @SpringBootTest
+@Transactional
 class ProcessarPagamentoOnlineServiceTest {
     @Autowired
     private GatewayRepository repository;
     @Autowired
     private ExecutorTransacional execTransacional;
+    @PersistenceContext
+    private EntityManager manager;
+
     private GatewayRepository repositoryMock=mock(GatewayRepository.class);
 
     private final static Long ID_PEDIDO = 1L;
@@ -46,6 +53,7 @@ class ProcessarPagamentoOnlineServiceTest {
 
     private PagamentoRequest pagamentoRequest;
     private ProcessarPagamentoOnlineService service;
+    private ProcessaPagamento processaPagamento;
 
     private GatewayPagamento gatewayPagamentoMock = mock(GatewayPagamento.class);
     private Gateway gatewayMock = mock(Gateway.class);
@@ -57,12 +65,13 @@ class ProcessarPagamentoOnlineServiceTest {
         this.valorPedido = new BigDecimal("23.5");
         this.tentativaSucesso = Optional.of(new TentativaPagamentoResponse("qualquer info extra aqui.", StatusPagamento.SUCESSO));
         this.tentativaFalha = Optional.empty();
+        this.processaPagamento= new ProcessaPagamento(valorPedido,pagamentoRequest,manager.find(FormaDePagamento.class,ID_FORMA_DE_PAGAMENTO_ONLINE));
 
     }
     @Test
     void deveFecharComSucessoOPagamento() {
         when(gatewayMock.taxa(valorPedido)).thenReturn(new BigDecimal("2.0"));
-        when(gatewayMock.realizarPagamento(pagamentoRequest, valorPedido)).thenReturn(tentativaSucesso);
+        when(gatewayMock.realizarPagamento(processaPagamento)).thenReturn(tentativaSucesso);
 
 
         List<Gateway> gateways= new ArrayList<>(2);
@@ -73,7 +82,7 @@ class ProcessarPagamentoOnlineServiceTest {
 
 
         this.service=new ProcessarPagamentoOnlineService(repositoryMock);
-        ResponseEntity<?> response = this.service.realizarPagamento(pagamentoRequest, valorPedido, execTransacional);
+        ResponseEntity<?> response = this.service.realizarPagamento(processaPagamento, execTransacional);
         assertEquals(ok().build(),response);
 
     }
@@ -81,7 +90,7 @@ class ProcessarPagamentoOnlineServiceTest {
     @Test
     void naoDeveProcessarOPagamento() {
         when(gatewayMock.taxa(valorPedido)).thenReturn(new BigDecimal("2.0"));
-        when(gatewayMock.realizarPagamento(pagamentoRequest, valorPedido)).thenReturn(tentativaFalha);
+        when(gatewayMock.realizarPagamento(processaPagamento)).thenReturn(tentativaFalha);
 
 
         List<Gateway> gateways= new ArrayList<>(2);
@@ -92,7 +101,7 @@ class ProcessarPagamentoOnlineServiceTest {
 
 
         this.service=new ProcessarPagamentoOnlineService(repositoryMock);
-        ResponseEntity<?> response = this.service.realizarPagamento(pagamentoRequest, valorPedido, execTransacional);
+        ResponseEntity<?> response = this.service.realizarPagamento(processaPagamento, execTransacional);
         assertEquals(status(402).build(),response);
 
     }

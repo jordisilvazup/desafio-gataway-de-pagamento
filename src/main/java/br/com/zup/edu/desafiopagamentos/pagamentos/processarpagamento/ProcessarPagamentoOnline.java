@@ -13,9 +13,6 @@ public class ProcessarPagamentoOnline implements ProcessarPagamento {
 
     @Override
     public ResponseEntity<?> processar(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional, ProcessarPagamentoOnlineService service) {
-        BigDecimal valorPedido=processaPagamento.getValorPedido();
-        PagamentoRequest request=processaPagamento.getPagamentoRequest();
-        FormaDePagamento formaDePagamento= processaPagamento.getFormaDePagamento();
-        return service.realizarPagamento(request, valorPedido,executorTransacional);
+        return service.realizarPagamento(processaPagamento,executorTransacional);
     }
 }

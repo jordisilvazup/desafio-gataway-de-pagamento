@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import static org.springframework.http.ResponseEntity.*;
+
 @Service
 public class ProcessarPagamentoOnlineService {
     private final GatewayRepository repository;
@@ -25,26 +27,27 @@ public class ProcessarPagamentoOnlineService {
     }
 
 
-    public ResponseEntity<?> realizarPagamento(PagamentoRequest request, BigDecimal valorPedido, ExecutorTransacional executorTransacional) {
+    public ResponseEntity<?> realizarPagamento(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional) {
+
 
         BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
+        List<Gateway> gatewaysPorMenorCusto = gatewaysPorMenorCusto(processaPagamento.getValorPedido());
 
-        List<Gateway> gatewaysPorMenorCusto = gatewaysPorMenorCusto(valorPedido);
 
+        Pagamento pagamento = processaPagamento.getPagamentoRequest().paraPagamentoOnline();
 
-        Pagamento pagamento = request.paraPagamentoOnline();
-
-        pagamento(request, valorPedido, gatewaysPorMenorCusto, pagamento, executorTransacional, buscarNoBancoDeDados);
+        pagamento(processaPagamento, gatewaysPorMenorCusto, pagamento, executorTransacional, buscarNoBancoDeDados);
 
         if (pagamento.naoProcessado()) {
-            return ResponseEntity.status(402).build();
+            return status(402).build();
         }
 
-        return ResponseEntity.ok().build();
+        return ok().build();
     }
 
-    private void pagamento(PagamentoRequest request, BigDecimal valorPedido, List<Gateway> gatewaysPorMenorCusto, Pagamento pagamento, ExecutorTransacional executorTransacional, BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados) {
+    private void pagamento(ProcessaPagamento processaPagamento, List<Gateway> gatewaysPorMenorCusto, Pagamento pagamento, ExecutorTransacional executorTransacional, BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados) {
         EntityManager manager = executorTransacional.getManager();
+        FormaDePagamento formaDePagamento= processaPagamento.getFormaDePagamento();
 
         executorTransacional.executa(() -> {
             manager.persist(pagamento);
@@ -55,12 +58,12 @@ public class ProcessarPagamentoOnlineService {
 
             Gateway gateway = gatewaysPorMenorCusto.get(0);
 
-            Optional<TentativaPagamentoResponse> possivelTentativaPagamentoResponse = gateway.realizarPagamento(request, valorPedido);
+            Optional<TentativaPagamentoResponse> possivelTentativaPagamentoResponse = gateway.realizarPagamento(processaPagamento);
 
             if (possivelTentativaPagamentoResponse.isPresent()) {
                 TentativaPagamentoResponse tentativaPagamentoResponse = possivelTentativaPagamentoResponse.get();
                 executorTransacional.executa(() -> {
-                    Transacao transacao = tentativaPagamentoResponse.paraTransacao(buscarNoBancoDeDados, pagamento, request, valorPedido);
+                    Transacao transacao = tentativaPagamentoResponse.paraTransacao(buscarNoBancoDeDados, pagamento, processaPagamento.getPagamentoRequest(), processaPagamento.getValorPedido());
                     manager.persist(transacao);
                     pagamento.associar(transacao);
                     return null;
