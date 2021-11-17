@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 
-public class SaoriClient {
+public class SaoriClient implements GatewayClient{
     private RestTemplate template = new RestTemplate();
     private String ENDERECO = "http://localhost:8080/api/saori/payment";
 
