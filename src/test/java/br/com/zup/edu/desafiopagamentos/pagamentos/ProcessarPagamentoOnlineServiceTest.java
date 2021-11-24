@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.gateways.Gateway;
 import br.com.zup.edu.desafiopagamentos.gateways.GatewayPagamento;
 import br.com.zup.edu.desafiopagamentos.gateways.GatewayRepository;
@@ -24,6 +25,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -69,7 +71,7 @@ class ProcessarPagamentoOnlineServiceTest {
 
     }
     @Test
-    void deveFecharComSucessoOPagamento() {
+    void deveFecharComSucessoOPagamento() throws PagamentoNaoProcessadoException {
         when(gatewayMock.taxa(valorPedido)).thenReturn(new BigDecimal("2.0"));
         when(gatewayMock.realizarPagamento(processaPagamento)).thenReturn(tentativaSucesso);
 
@@ -82,13 +84,13 @@ class ProcessarPagamentoOnlineServiceTest {
 
 
         this.service=new ProcessarPagamentoOnlineService(repositoryMock);
-        ResponseEntity<?> response = this.service.realizarPagamento(processaPagamento, execTransacional);
-        assertEquals(ok().build(),response);
+        Map<String,String> response = this.service.realizarPagamento(processaPagamento, execTransacional);
+        assertEquals(Map.of(),response);
 
     }
 
     @Test
-    void naoDeveProcessarOPagamento() {
+    void naoDeveProcessarOPagamento() throws PagamentoNaoProcessadoException {
         when(gatewayMock.taxa(valorPedido)).thenReturn(new BigDecimal("2.0"));
         when(gatewayMock.realizarPagamento(processaPagamento)).thenReturn(tentativaFalha);
 
@@ -101,8 +103,7 @@ class ProcessarPagamentoOnlineServiceTest {
 
 
         this.service=new ProcessarPagamentoOnlineService(repositoryMock);
-        ResponseEntity<?> response = this.service.realizarPagamento(processaPagamento, execTransacional);
-        assertEquals(status(402).build(),response);
+        assertThrows(PagamentoNaoProcessadoException.class,()->this.service.realizarPagamento(processaPagamento, execTransacional));
 
     }
 

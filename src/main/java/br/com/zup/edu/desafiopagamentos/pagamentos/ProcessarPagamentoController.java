@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.PagamentoRequest;
 import br.com.zup.edu.desafiopagamentos.pedidos.clients.PedidoClient;
 import br.com.zup.edu.desafiopagamentos.util.ExecutorTransacional;
@@ -13,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/api/v1/pagamentos")
@@ -35,16 +38,22 @@ public class ProcessarPagamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> processarPagamento(@RequestBody @Valid PagamentoRequest request) {
+    public ResponseEntity<?> processarPagamento(@RequestBody @Valid PagamentoRequest request) throws PagamentoNaoProcessadoException {
 
         Map<String, BigDecimal> valorDoPedido = client.consultarPedido(request.getIdPedido()).getBody();
         BigDecimal valorPedido = valorDoPedido.get("valor");
 
         FormaDePagamento formaDePagamento = executorTransacional.executa(() -> executorTransacional.getManager().find(FormaDePagamento.class, request.getIdFormaPagamento()));
 
-        ProcessaPagamento processaPagamento = new ProcessaPagamento(valorPedido,request,formaDePagamento);
+        ProcessaPagamento processaPagamento = new ProcessaPagamento(valorPedido, request, formaDePagamento);
 
-        return formaDePagamento.processarPagamento(processaPagamento,executorTransacional,processarPagamentoOnlineService);
+        Map<String, String> response = formaDePagamento.processarPagamento(processaPagamento, executorTransacional, processarPagamentoOnlineService);
 
+
+        if (!response.isEmpty()) {
+            return ok(response);
+        }
+
+        return ok().build();
     }
 }

@@ -15,6 +15,10 @@ public class ProcessaPagamento {
         this.formaDePagamento = formaDePagamento;
     }
 
+    public Pagamento paraPagamento(){
+        return pagamentoRequest.paraPagamentoOnline();
+    }
+
     public BigDecimal getValorPedido() {
         return valorPedido;
     }

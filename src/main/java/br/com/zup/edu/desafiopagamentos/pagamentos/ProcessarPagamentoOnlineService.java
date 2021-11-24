@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.gateways.Gateway;
 import br.com.zup.edu.desafiopagamentos.gateways.GatewayRepository;
 import br.com.zup.edu.desafiopagamentos.gateways.clients.TentativaPagamentoResponse;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -27,22 +29,22 @@ public class ProcessarPagamentoOnlineService {
     }
 
 
-    public ResponseEntity<?> realizarPagamento(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional) {
+    public Map<String,String> realizarPagamento(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional) throws PagamentoNaoProcessadoException {
 
 
         BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados = (id, classe) -> executorTransacional.getManager().find(classe, id);
         List<Gateway> gatewaysPorMenorCusto = gatewaysPorMenorCusto(processaPagamento.getValorPedido());
 
 
-        Pagamento pagamento = processaPagamento.getPagamentoRequest().paraPagamentoOnline();
+        Pagamento pagamento = processaPagamento.paraPagamento();
 
         pagamento(processaPagamento, gatewaysPorMenorCusto, pagamento, executorTransacional, buscarNoBancoDeDados);
 
         if (pagamento.naoProcessado()) {
-            return status(402).build();
+            throw new PagamentoNaoProcessadoException("Este pagamento nao foi processado.");
         }
 
-        return ok().build();
+        return Map.of();
     }
 
     private void pagamento(ProcessaPagamento processaPagamento, List<Gateway> gatewaysPorMenorCusto, Pagamento pagamento, ExecutorTransacional executorTransacional, BiFunction<Long, Class<?>, Object> buscarNoBancoDeDados) {

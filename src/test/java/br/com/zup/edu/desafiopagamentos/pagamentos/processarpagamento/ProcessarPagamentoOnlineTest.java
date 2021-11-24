@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento;
 
+import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessaPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.ProcessarPagamentoOnlineService;
@@ -15,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.text.Normalizer;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,17 +48,17 @@ class ProcessarPagamentoOnlineTest {
     }
 
     @Test
-    void deveProcessarUmPagamentoOnline() {
-        when(service.realizarPagamento(processaPagamento, execTransacional)).thenReturn(ok().build());
-        ResponseEntity<?> processar = processarPagamentoOnline.processar(processaPagamento, execTransacional, service);
-        assertEquals(ok().build(), processar);
+    void deveProcessarUmPagamentoOnline() throws PagamentoNaoProcessadoException {
+        when(service.realizarPagamento(processaPagamento, execTransacional)).thenReturn(Map.of());
+        Map<String,String> processar =  processarPagamentoOnline.processar(processaPagamento, execTransacional, service);
+        assertEquals(Map.of(), processar);
     }
 
     @Test
-    void naoDeveProcessarUmPagamentoOnline() {
-        when(service.realizarPagamento(processaPagamento, execTransacional)).thenReturn(unprocessableEntity().build());
-        ResponseEntity<?> processar = processarPagamentoOnline.processar(processaPagamento, execTransacional, service);
-        assertEquals(unprocessableEntity().build(), processar);
+    void naoDeveProcessarUmPagamentoOnline() throws PagamentoNaoProcessadoException {
+        when(service.realizarPagamento(processaPagamento, execTransacional)).thenThrow(PagamentoNaoProcessadoException.class);
+        assertThrows(PagamentoNaoProcessadoException.class,()->processarPagamentoOnline.processar(processaPagamento, execTransacional, service));
+
     }
 
 }

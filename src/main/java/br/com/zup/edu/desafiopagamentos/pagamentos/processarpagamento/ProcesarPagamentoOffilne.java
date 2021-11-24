@@ -17,7 +17,7 @@ import static org.springframework.http.ResponseEntity.*;
 public class ProcesarPagamentoOffilne implements ProcessarPagamento {
 
     @Override
-    public ResponseEntity<?> processar(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional, ProcessarPagamentoOnlineService service) {
+    public Map<String,String> processar(ProcessaPagamento processaPagamento, ExecutorTransacional executorTransacional, ProcessarPagamentoOnlineService service) {
 
         BigDecimal valorPedido=processaPagamento.getValorPedido();
         PagamentoRequest request=processaPagamento.getPagamentoRequest();
@@ -38,7 +38,7 @@ public class ProcesarPagamentoOffilne implements ProcessarPagamento {
             return tentativaDePagamento;
 
         });
-        return ok().body(Map.of("codigoParaContinuarProcessing", pagamento.getCodigoParaConfirmacaoDePagamento()));
+        return Map.of("codigoParaContinuarProcessing", pagamento.getCodigoParaConfirmacaoDePagamento());
     }
 
 

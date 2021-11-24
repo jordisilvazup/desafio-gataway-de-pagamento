@@ -1,9 +1,12 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.util.ExecutorTransacional;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
+
+import java.util.Map;
 
 import static javax.persistence.EnumType.*;
 
@@ -30,7 +33,7 @@ public class FormaDePagamento {
     public FormaDePagamento() {
     }
 
-    public ResponseEntity<?> processarPagamento(ProcessaPagamento request, ExecutorTransacional executorTransacional,ProcessarPagamentoOnlineService processarPagamentoOnlineService){
+    public Map<String, String> processarPagamento(ProcessaPagamento request, ExecutorTransacional executorTransacional, ProcessarPagamentoOnlineService processarPagamentoOnlineService) throws PagamentoNaoProcessadoException {
         return this.getTipo().processarPagamento().processar(request,executorTransacional,processarPagamentoOnlineService);
     }
     public String getDescricao() {
