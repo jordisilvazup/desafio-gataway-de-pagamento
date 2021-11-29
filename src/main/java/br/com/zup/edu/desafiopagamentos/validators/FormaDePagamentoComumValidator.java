@@ -8,7 +8,6 @@ import org.springframework.validation.Validator;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 public class FormaDePagamentoComumValidator implements Validator {

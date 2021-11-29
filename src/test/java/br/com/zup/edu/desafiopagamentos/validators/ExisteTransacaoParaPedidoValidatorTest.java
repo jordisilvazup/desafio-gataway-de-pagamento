@@ -37,7 +37,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
     private Restaurante restaurante;
     private FormaDePagamento formaDePagamento;
     private Usuario usuario;
-    private final static Long ID_PEDIDO = 1L;
+    private final static Long ID_PEDIDO = 2L;
     private final static Long ID_RESTAURANTE = 1L;
     private final static Long ID_FORMA_DE_PAGAMENTO = 1L;
     private final static Long ID_USUARIO = 1L;
@@ -46,7 +46,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
 
     @BeforeEach
     void setUp() {
-        this.validator = new ExisteTransacaoParaPedidoValidator(transacaoRepository);
+        this.validator = new ExisteTransacaoParaPedidoValidator(transacaoRepository, manager);
         this.usuario = manager.find(Usuario.class, ID_USUARIO);
         this.restaurante = manager.find(Restaurante.class, ID_RESTAURANTE);
         this.formaDePagamento = manager.find(FormaDePagamento.class, ID_FORMA_DE_PAGAMENTO);
@@ -72,6 +72,7 @@ class ExisteTransacaoParaPedidoValidatorTest {
         );
 
         transacaoRepository.save(transacaoExistente);
+        novoPagamento.associar(transacaoExistente);
 
         PagamentoRequest request= new PagamentoRequest(ID_PEDIDO,ID_RESTAURANTE,ID_USUARIO,ID_FORMA_DE_PAGAMENTO);
 

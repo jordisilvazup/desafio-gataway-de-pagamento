@@ -1,11 +1,35 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcesarPagamentoOffilne;
+import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcessarPagamento;
+import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcessarPagamentoOnline;
+
 public enum TipoPagamento {
 
-    CARTAO(false),
-    DINHEIRO(true),
-    MAQUINA(true),
-    CHEQUE(true);
+    CARTAO(false){
+        @Override
+        public ProcessarPagamento processarPagamento() {
+            return new ProcessarPagamentoOnline();
+        }
+    },
+    DINHEIRO(true){
+        @Override
+        public ProcessarPagamento processarPagamento() {
+            return new ProcesarPagamentoOffilne();
+        }
+    },
+    MAQUINA(true){
+        @Override
+        public ProcessarPagamento processarPagamento() {
+            return new ProcesarPagamentoOffilne();
+        }
+    },
+    CHEQUE(true){
+        @Override
+        public ProcessarPagamento processarPagamento() {
+            return new ProcesarPagamentoOffilne();
+        }
+    };
 
 
     TipoPagamento(boolean disponibilidadeOffline) {
@@ -13,6 +37,7 @@ public enum TipoPagamento {
     }
 
     private final boolean disponibilidadeOffline;
+    public abstract ProcessarPagamento processarPagamento();
 
     public boolean isDisponibilidadeOffline() {
         return this.disponibilidadeOffline;

@@ -32,6 +32,12 @@ public class PagamentoRequest {
     @ExistId(domainClass = FormaDePagamento.class)
     private Long idFormaPagamento;
 
+    @JsonProperty("num_cartao")
+    private String numCartao;
+
+    @JsonProperty("cod_seguranca")
+    private String codSeguranca;
+
     @JsonProperty
     private String informacoesExtras;
 
@@ -43,14 +49,25 @@ public class PagamentoRequest {
         this.idFormaPagamento = idFormaPagamento;
     }
 
+    public PagamentoRequest(Long idPedido, Long idRestaurante, Long idUsuario, Long idFormaPagamento, String numCartao, String codSeguranca, String informacoesExtras) {
+        this.idPedido = idPedido;
+        this.idRestaurante = idRestaurante;
+        this.idUsuario = idUsuario;
+        this.idFormaPagamento = idFormaPagamento;
+        this.numCartao = numCartao;
+        this.codSeguranca = codSeguranca;
+        this.informacoesExtras = informacoesExtras;
+    }
 
-    public Pagamento paraPagamento(BiFunction<Long, Class<?>, Object> find, TentativaDeTransacao tentativaDeTransacao) {
+    public PagamentoRequest() {
+    }
+
+    public Pagamento paraPagamentoOffline(BiFunction<Long, Class<?>, Object> find, FormaDePagamento formaDePagamento, TentativaDeTransacao tentativaDeTransacao) {
 
         Restaurante restaurante = (Restaurante) find.apply(idRestaurante, Restaurante.class);
 
         Usuario usuario = (Usuario) find.apply(idRestaurante, Usuario.class);
 
-        FormaDePagamento formaDePagamento = (FormaDePagamento) find.apply(idRestaurante, FormaDePagamento.class);
 
         Pagamento novoPagamento = new Pagamento(informacoesExtras);
 
@@ -65,6 +82,10 @@ public class PagamentoRequest {
         );
         novoPagamento.associar(transacao);
         return novoPagamento;
+    }
+
+    public Pagamento paraPagamentoOnline() {
+         return new Pagamento(informacoesExtras);
     }
 
     public Long getIdFormaPagamento() {
@@ -83,5 +104,11 @@ public class PagamentoRequest {
         return idPedido;
     }
 
+    public String getCodSeguranca() {
+        return codSeguranca;
+    }
 
+    public String getNumCartao() {
+        return numCartao;
+    }
 }

@@ -72,4 +72,8 @@ public class Pagamento {
 
         associar(transacao);
     }
+
+    public boolean naoProcessado(){
+        return this.transacoes.stream().allMatch(Transacao::falha);
+    }
 }

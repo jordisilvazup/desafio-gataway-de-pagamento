@@ -62,3 +62,7 @@ insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) val
 insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (2,2.5,1,1,4);
 insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (3,2.5,1,1,3);
 insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (4,2.5,1,1,2);
+
+insert into gateway values (1,'SEYA');
+insert into gateway values (2,'SAORI');
+insert into gateway values (3,'TANGO');

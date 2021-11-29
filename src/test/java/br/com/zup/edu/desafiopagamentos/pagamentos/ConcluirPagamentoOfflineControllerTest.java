@@ -47,7 +47,7 @@ class ConcluirPagamentoOfflineControllerTest {
     @BeforeEach
     void setUp() {
 
-        this.pagamento=new Pagamento("sem info");
+        this.pagamento = new Pagamento("sem info");
         manager.persist(pagamento);
 
         this.formaDePagamento = manager.find(FormaDePagamento.class, 1L);
@@ -60,10 +60,10 @@ class ConcluirPagamentoOfflineControllerTest {
     }
 
     @Test
-    void naoDeveConcluirUmPagamentoQueNaoExiste() throws Exception{
+    void naoDeveConcluirUmPagamentoQueNaoExiste() throws Exception {
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/api/v1/pagamentos/{codigoDoPagamento}","qualquerCoisa")
+                .post("/api/v1/pagamentos/{codigoDoPagamento}", "qualquerCoisa")
                 .contentType(APPLICATION_JSON);
 
 
@@ -72,11 +72,12 @@ class ConcluirPagamentoOfflineControllerTest {
                         MockMvcResultMatchers.status().isNotFound()
                 );
     }
+
     @Test
-    void naoDeveConcluirUmPagamentoQueNaoFoiIniciado() throws Exception{
+    void naoDeveConcluirUmPagamentoQueNaoFoiIniciado() throws Exception {
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/api/v1/pagamentos/{codigoDoPagamento}",pagamento.getCodigoParaConfirmacaoDePagamento())
+                .post("/api/v1/pagamentos/{codigoDoPagamento}", pagamento.getCodigoParaConfirmacaoDePagamento())
                 .contentType(APPLICATION_JSON);
 
 
@@ -85,18 +86,17 @@ class ConcluirPagamentoOfflineControllerTest {
                         MockMvcResultMatchers.status().isBadRequest()
                 );
     }
+
     @Test
     @Transactional
-    void naoDeveConcluirUmPagamentoQueJaFoiConcluido() throws Exception{
-
-        Transacao transacaoParaAguardo = new Transacao(pagamento, restaurante, 1L, valor, AGUARDANDO_CONFIRMACAO, formaDePagamento, usuario);
-        this.pagamento.associar(transacaoParaAguardo);
+    void naoDeveConcluirUmPagamentoQueJaFoiConcluido() throws Exception {
 
         Transacao transacaoConcluida = new Transacao(pagamento, restaurante, 1L, valor, CONCLUIDA, formaDePagamento, usuario);
         this.pagamento.associar(transacaoConcluida);
 
+
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/api/v1/pagamentos/{codigoDoPagamento}",pagamento.getCodigoParaConfirmacaoDePagamento())
+                .post("/api/v1/pagamentos/{codigoDoPagamento}", pagamento.getCodigoParaConfirmacaoDePagamento())
                 .contentType(APPLICATION_JSON);
 
 
@@ -105,15 +105,16 @@ class ConcluirPagamentoOfflineControllerTest {
                         MockMvcResultMatchers.status().isBadRequest()
                 );
     }
+
     @Test
     @Transactional
-    void deveConcluirUmPagamentoQueJaFoiIniciado() throws Exception{
+    void deveConcluirUmPagamentoQueJaFoiIniciado() throws Exception {
 
         Transacao transacaoParaAguardo = new Transacao(pagamento, restaurante, 1L, valor, AGUARDANDO_CONFIRMACAO, formaDePagamento, usuario);
         this.pagamento.associar(transacaoParaAguardo);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/api/v1/pagamentos/{codigoDoPagamento}",pagamento.getCodigoParaConfirmacaoDePagamento())
+                .post("/api/v1/pagamentos/{codigoDoPagamento}", pagamento.getCodigoParaConfirmacaoDePagamento())
                 .contentType(APPLICATION_JSON);
 
 
