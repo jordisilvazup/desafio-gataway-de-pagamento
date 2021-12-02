@@ -12,7 +12,7 @@ import static javax.persistence.EnumType.*;
 
 @Entity
 @Cacheable
-public class FormaDePagamento {
+public class FormaDePagamento  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

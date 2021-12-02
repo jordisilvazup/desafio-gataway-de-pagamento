@@ -4,7 +4,9 @@ import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcesarPa
 import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcessarPagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento.ProcessarPagamentoOnline;
 
-public enum TipoPagamento {
+import java.io.Serializable;
+
+public enum TipoPagamento implements Serializable {
 
     CARTAO(false){
         @Override

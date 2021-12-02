@@ -66,4 +66,8 @@ public class Restaurante {
                 .collect(Collectors.toList());
 
     }
+
+    public Long getId() {
+        return this.id;
+    }
 }
