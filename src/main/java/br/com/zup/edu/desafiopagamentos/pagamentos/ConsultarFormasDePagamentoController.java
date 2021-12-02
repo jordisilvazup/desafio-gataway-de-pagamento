@@ -45,9 +45,11 @@ public class ConsultarFormasDePagamentoController {
                         .body(restaurantePreferidoDoUsuario.formasDePagamento());
 
             }
+
             restaurantePreferidoDoUsuario.incrementarAcesso();
 
             cacheService.atualizar(restaurantePreferidoDoUsuario);
+
             return ResponseEntity.ok(restaurantePreferidoDoUsuario.formasDePagamento());
 
         }

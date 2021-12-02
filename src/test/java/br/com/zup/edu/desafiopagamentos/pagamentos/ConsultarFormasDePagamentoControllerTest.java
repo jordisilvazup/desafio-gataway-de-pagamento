@@ -1,5 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
+import br.com.zup.edu.desafiopagamentos.config.TestRedisConfiguration;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,7 @@ import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(classes = TestRedisConfiguration.class)
 @AutoConfigureDataJpa
 @AutoConfigureMockMvc
 @Transactional
@@ -37,7 +38,6 @@ class ConsultarFormasDePagamentoControllerTest {
 
     @PersistenceContext
     private EntityManager manager;
-
 
 
     @Test
@@ -61,7 +61,42 @@ class ConsultarFormasDePagamentoControllerTest {
                         content().json(response)
                 );
 
+
     }
+
+    @Test
+    void deveRetornarAsFormasDePagamentoComumDeUmRestaurantePreferidoDoUsuario() throws Exception {
+
+        FormasDePagamentoEmComumRequest requestObject = new FormasDePagamentoEmComumRequest(1L, 1L);
+
+        String request = mapper.writeValueAsString(requestObject);
+
+        final String URI = "/api/v1/forma-de-pagamento";
+
+        MockHttpServletRequestBuilder consultaRequest = get(URI).contentType(APPLICATION_JSON).content(request);
+
+        String response = mapper.writeValueAsString(formasDePagamentoEmComum());
+
+        for (int i = 0; i <= 10; i++) {
+            mockMvc.perform(consultaRequest)
+                    .andExpect(
+                            status().isOk()
+                    ).andExpect(
+                            content().json(response)
+                    );
+
+        }
+        mockMvc.perform(consultaRequest)
+                .andExpect(
+                        status().isOk()
+                ).andExpect(
+                        header().exists("Cache-Control")
+                ).andExpect(
+                        content().json(response)
+                );
+
+    }
+
     @Test
     void deveRetornarAsFormasDePagamentoComumEntreUmRestauranteEUsuarioFraudolento() throws Exception {
 
