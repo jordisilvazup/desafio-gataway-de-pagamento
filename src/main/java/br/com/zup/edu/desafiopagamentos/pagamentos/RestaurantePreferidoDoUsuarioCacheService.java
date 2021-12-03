@@ -1,6 +1,5 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
-import br.com.zup.edu.desafiopagamentos.fraude.FraudeRepository;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package br.com.zup.edu.desafiopagamentos.pagamentos.processarpagamento;
+package br.com.zup.edu.desafiopagamentos.pagamentos;
 
 import br.com.zup.edu.desafiopagamentos.fraude.FraudeRepository;
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;

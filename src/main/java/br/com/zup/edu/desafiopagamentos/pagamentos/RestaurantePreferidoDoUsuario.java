@@ -3,11 +3,9 @@ package br.com.zup.edu.desafiopagamentos.pagamentos;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.TimeToLive;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static br.com.zup.edu.desafiopagamentos.util.PropriedadeCache.DEFAULT_TIMING;
 
@@ -22,11 +20,6 @@ public class RestaurantePreferidoDoUsuario implements Serializable {
     public RestaurantePreferidoDoUsuario(String id, List<FormasDePagamentoResponse> formasDePagamento) {
         this.id = id;
         this.formasDePagamento = formasDePagamento;
-        this.quantidadeAcesso = 1;
-//        iniciarContador();
-    }
-
-    private void iniciarContador() {
         this.quantidadeAcesso = 1;
     }
 
