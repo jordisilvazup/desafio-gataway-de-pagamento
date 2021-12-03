@@ -7,3 +7,9 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: pagamento
+
+  redis:
+    container_name: reddis
+    image: 'redis:latest'
+    ports:
+      - 6379:6379
