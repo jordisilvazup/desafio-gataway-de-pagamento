@@ -24,6 +24,7 @@ public class Restaurante {
 
     @ManyToMany
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+    @JoinTable(indexes = {@Index(name = "restaurante_id",columnList = "restaurante_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {

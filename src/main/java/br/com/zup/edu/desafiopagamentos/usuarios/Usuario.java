@@ -23,8 +23,9 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+    @JoinTable(indexes = {@Index(name = "usuario_id",columnList = "usuario_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
     public Usuario(String nome, String email, FormaDePagamento formaDePagamento) {
