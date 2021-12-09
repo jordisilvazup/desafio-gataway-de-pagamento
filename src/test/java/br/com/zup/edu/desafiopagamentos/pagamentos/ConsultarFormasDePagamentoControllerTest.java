@@ -1,10 +1,8 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
-import br.com.zup.edu.desafiopagamentos.config.TestRedisConfiguration;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -20,11 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = TestRedisConfiguration.class)
+@SpringBootTest
 @AutoConfigureDataJpa
 @AutoConfigureMockMvc
 @Transactional
@@ -64,38 +63,7 @@ class ConsultarFormasDePagamentoControllerTest {
 
     }
 
-    @Test
-    void deveRetornarAsFormasDePagamentoComumDeUmRestaurantePreferidoDoUsuario() throws Exception {
 
-        FormasDePagamentoEmComumRequest requestObject = new FormasDePagamentoEmComumRequest(1L, 1L);
-
-        String request = mapper.writeValueAsString(requestObject);
-
-        final String URI = "/api/v1/forma-de-pagamento";
-
-        MockHttpServletRequestBuilder consultaRequest = get(URI).contentType(APPLICATION_JSON).content(request);
-
-        String response = mapper.writeValueAsString(formasDePagamentoEmComum());
-
-        for (int i = 0; i <= 10; i++) {
-            mockMvc.perform(consultaRequest)
-                    .andExpect(
-                            status().isOk()
-                    ).andExpect(
-                            content().json(response)
-                    );
-
-        }
-        mockMvc.perform(consultaRequest)
-                .andExpect(
-                        status().isOk()
-                ).andExpect(
-                        header().exists("Cache-Control")
-                ).andExpect(
-                        content().json(response)
-                );
-
-    }
 
     @Test
     void deveRetornarAsFormasDePagamentoComumEntreUmRestauranteEUsuarioFraudolento() throws Exception {
