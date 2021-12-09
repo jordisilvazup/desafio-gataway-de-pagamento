@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +21,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+    @ManyToMany
     @JoinTable(indexes = {@Index(name = "usuario_id",columnList = "usuario_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 

@@ -8,20 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
-
-import static br.com.zup.edu.desafiopagamentos.util.PropriedadeCache.DEFAULT_TIMING;
 
 @RestController
 @RequestMapping("/api/v1")
 public class ConsultarFormasDePagamentoController {
 
     private final ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService consultarNoBancoDeDadosService;
-    private final RestaurantePreferidoDoUsuarioCacheService cacheService;
 
-    public ConsultarFormasDePagamentoController(ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService consultarNoBancoDeDadosService, RestaurantePreferidoDoUsuarioCacheService cacheService) {
+
+    public ConsultarFormasDePagamentoController(ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService consultarNoBancoDeDadosService) {
         this.consultarNoBancoDeDadosService = consultarNoBancoDeDadosService;
-        this.cacheService = cacheService;
     }
 
 

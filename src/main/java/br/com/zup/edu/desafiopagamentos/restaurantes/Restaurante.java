@@ -11,8 +11,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Entity
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Restaurante {
 
     @Id
@@ -23,7 +21,6 @@ public class Restaurante {
     private String nome;
 
     @ManyToMany
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     @JoinTable(indexes = {@Index(name = "restaurante_id",columnList = "restaurante_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
