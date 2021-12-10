@@ -39,7 +39,14 @@ select i as usuario_id,
 j as forma_de_pagamentos_id
 from generate_series(1,1000000) as i, generate_series(1,5) as j
 
-insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (1,3.5,1,1,1);
-insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (2,2.5,1,1,4);
-insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (3,2.5,1,1,3);
-insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id) values (4,2.5,1,1,2);
+
+-- inserir pedido
+insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id)
+select
+	 i as id,
+	random() as valor,
+	floor(random() * (6 - 1)+ 1) as forma_de_pagamento_id,
+	floor(random() * (1000001 - 1)+ 1) as restaurante_id,
+	floor(random() * (1000001 - 1)+ 1) as usuario_id
+from
+	generate_series(1, 1000000) as i
