@@ -1,7 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.usuarios;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

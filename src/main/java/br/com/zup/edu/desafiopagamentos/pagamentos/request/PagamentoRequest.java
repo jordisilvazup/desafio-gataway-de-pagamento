@@ -7,7 +7,6 @@ import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
 import br.com.zup.edu.desafiopagamentos.transacoes.Transacao;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
 import br.com.zup.edu.desafiopagamentos.validators.ExistId;
-import br.com.zup.edu.desafiopagamentos.validators.ExistPedido;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
@@ -16,7 +15,6 @@ import java.util.function.BiFunction;
 import static br.com.zup.edu.desafiopagamentos.transacoes.StatusTransacao.AGUARDANDO_CONFIRMACAO;
 
 public class PagamentoRequest {
-    @ExistPedido
     @NotNull
     private Long idPedido;
 

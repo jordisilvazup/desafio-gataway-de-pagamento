@@ -2,7 +2,6 @@ package br.com.zup.edu.desafiopagamentos.restaurantes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;

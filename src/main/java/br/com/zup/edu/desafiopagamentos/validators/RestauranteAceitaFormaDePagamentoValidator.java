@@ -21,7 +21,9 @@ public class RestauranteAceitaFormaDePagamentoValidator implements AceitaFormaDe
     @Override
     public Optional<String> validar(PagamentoRequest request) {
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
-        Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
+        Restaurante restaurante = manager.createQuery("select r from Restaurante r join fetch r.formaDePagamentos where r.id=:id", Restaurante.class)
+                .setParameter("id", request.getIdRestaurante())
+                .getSingleResult();
 
         if (!restaurante.aceita(formaDePagamento)) {
             return Optional.of("Restaurante não aceita esta forma de pagamento. ");
