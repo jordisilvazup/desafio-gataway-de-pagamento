@@ -2,6 +2,7 @@ package br.com.zup.edu.desafiopagamentos.restaurantes;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 import br.com.zup.edu.desafiopagamentos.usuarios.Usuario;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Restaurante {
 
     @Id
@@ -19,10 +21,11 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @ManyToMany
-    @JoinTable(indexes = {@Index(name = "restaurante_id",columnList = "restaurante_id")})
-    private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
+    @JoinTable(indexes = {@Index(name = "restaurante_id",columnList = "restaurante_id")})
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+    @ManyToMany
+    private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {
         this.nome = nome;
         this.formaDePagamentos = formaDePagamentos;

@@ -29,10 +29,12 @@ public class ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService {
             EntityManager manager = executorTransacional.getManager();
 
             Usuario usuario = manager.createQuery("select r from Usuario r join fetch r.formaDePagamentos where r.id=:id", Usuario.class)
+                    .setHint("org.hibernate.cacheable", true)
                     .setParameter("id", request.getIdUsuario())
                     .getSingleResult();
 
             Restaurante restaurante = manager.createQuery("select r from Restaurante r join fetch r.formaDePagamentos where r.id=:id", Restaurante.class)
+                    .setHint("org.hibernate.cacheable", true)
                     .setParameter("id", request.getIdRestaurante())
                     .getSingleResult();
 

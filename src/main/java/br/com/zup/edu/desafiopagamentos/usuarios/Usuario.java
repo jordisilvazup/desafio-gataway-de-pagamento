@@ -1,6 +1,7 @@
 package br.com.zup.edu.desafiopagamentos.usuarios;
 
 import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +23,7 @@ public class Usuario {
     private String email;
 
     @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
     @JoinTable(indexes = {@Index(name = "usuario_id",columnList = "usuario_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
