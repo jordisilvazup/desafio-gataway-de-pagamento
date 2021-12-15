@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Restaurante {
 
     @Id
@@ -22,10 +22,11 @@ public class Restaurante {
     private String nome;
 
 
-    @JoinTable(indexes = {@Index(name = "restaurante_id",columnList = "restaurante_id")})
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+    @JoinTable(indexes = {@Index(name = "restaurante_id", columnList = "restaurante_id")})
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @ManyToMany
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
+
     public Restaurante(String nome, List<FormaDePagamento> formaDePagamentos) {
         this.nome = nome;
         this.formaDePagamentos = formaDePagamentos;
@@ -39,7 +40,7 @@ public class Restaurante {
         return formaDePagamentos;
     }
 
-    public boolean aceita(FormaDePagamento formaDePagamento){
+    public boolean aceita(FormaDePagamento formaDePagamento) {
         return this.formaDePagamentos.contains(formaDePagamento);
     }
 

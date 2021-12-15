@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class Usuario {
     private String email;
 
     @ManyToMany
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-    @JoinTable(indexes = {@Index(name = "usuario_id",columnList = "usuario_id")})
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+    @JoinTable(indexes = {@Index(name = "usuario_id", columnList = "usuario_id")})
     private List<FormaDePagamento> formaDePagamentos = new ArrayList<>();
 
     public Usuario(String nome, String email, FormaDePagamento formaDePagamento) {
@@ -49,7 +49,7 @@ public class Usuario {
         return formaDePagamentos;
     }
 
-    public boolean aceita(FormaDePagamento formaDePagamento){
+    public boolean aceita(FormaDePagamento formaDePagamento) {
         return this.getFormaDePagamentos().contains(formaDePagamento);
     }
 

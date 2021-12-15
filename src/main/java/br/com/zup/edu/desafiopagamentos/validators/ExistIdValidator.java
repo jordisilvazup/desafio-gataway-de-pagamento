@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 public class ExistIdValidator implements ConstraintValidator<ExistId,Long> {
     private final EntityManager manager;
-    private String domainClass;
+    private Class<?> domainClass;
 
 
     public ExistIdValidator(EntityManager manager) {
@@ -16,18 +16,13 @@ public class ExistIdValidator implements ConstraintValidator<ExistId,Long> {
 
     @Override
     public void initialize(ExistId constraintAnnotation) {
-        this.domainClass=constraintAnnotation.domainClass().getSimpleName();
+        this.domainClass=constraintAnnotation.domainClass();
     }
 
 
     @Override
     @Transactional
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
-        String existeId="SELECT r FROM "+domainClass+" r WHERE r.id=:id";
-        return !manager.createQuery(existeId)
-                .setParameter("id", id)
-                .getResultList()
-                .isEmpty();
-
+        return manager.find(domainClass,id)!=null;
     }
 }

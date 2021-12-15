@@ -12,7 +12,7 @@ import java.util.Map;
 import static javax.persistence.EnumType.*;
 
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class FormaDePagamento  {
 
     @Id
