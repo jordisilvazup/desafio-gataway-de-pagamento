@@ -8,7 +8,7 @@ public class SeyaClient {
 
     private RestTemplate template = GatewayClientFactory.getRestTemplate();
 
-    private String ENDERECO_BASE = "http://localhost:8080/api/seya";
+    private String ENDERECO_BASE = "http://localhost:8082/api/seya";
 
     public VerificacaoDeCartaoResponse verificaCartao(PaymentExternalRequest request) {
         HttpEntity<PaymentExternalRequest> payload = new HttpEntity<>(request);

@@ -40,13 +40,13 @@ j as forma_de_pagamentos_id
 from generate_series(1,1000000) as i, generate_series(1,5) as j
 
 
--- inserir pedido
-insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id)
+-- inserir pedido - deve ser no banco pedido
+    insert into pedido(id,valor,forma_de_pagamento_id,restaurante_id,usuario_id)
 select
-	 i as id,
-	random() as valor,
-	floor(random() * (6 - 1)+ 1) as forma_de_pagamento_id,
-	floor(random() * (1000001 - 1)+ 1) as restaurante_id,
-	floor(random() * (1000001 - 1)+ 1) as usuario_id
+    i as id,
+    random() as valor,
+    floor(random() * (6 - 1)+ 1) as forma_de_pagamento_id,
+    floor(random() * (1000001 - 1)+ 1) as restaurante_id,
+    floor(random() * (1000001 - 1)+ 1) as usuario_id
 from
-	generate_series(1, 1000000) as i
+    generate_series(1, 1000000) as i
