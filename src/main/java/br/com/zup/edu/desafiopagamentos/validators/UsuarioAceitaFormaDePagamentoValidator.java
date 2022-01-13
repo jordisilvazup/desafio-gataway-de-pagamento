@@ -19,7 +19,9 @@ public class UsuarioAceitaFormaDePagamentoValidator implements AceitaFormaDePagm
     @Override
     public Optional<String> validar(PagamentoRequest request) {
         FormaDePagamento formaDePagamento = manager.find(FormaDePagamento.class, request.getIdFormaPagamento());
-        Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
+        Usuario usuario = manager.createQuery("select r from Usuario r join fetch r.formaDePagamentos where r.id=:id", Usuario.class)
+                .setParameter("id", request.getIdUsuario())
+                .getSingleResult();
 
         if (!usuario.aceita(formaDePagamento)) {
             return Optional.of("Usuario não aceita esta forma de pagamento. ");

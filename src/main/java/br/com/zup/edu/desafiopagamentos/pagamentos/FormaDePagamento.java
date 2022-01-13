@@ -2,6 +2,7 @@ package br.com.zup.edu.desafiopagamentos.pagamentos;
 
 import br.com.zup.edu.desafiopagamentos.exception.PagamentoNaoProcessadoException;
 import br.com.zup.edu.desafiopagamentos.util.ExecutorTransacional;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Map;
 import static javax.persistence.EnumType.*;
 
 @Entity
-@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class FormaDePagamento  {
 
     @Id

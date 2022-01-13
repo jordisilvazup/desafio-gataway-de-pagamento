@@ -1,7 +1,6 @@
 package br.com.zup.edu.desafiopagamentos.pagamentos;
 
 import br.com.zup.edu.desafiopagamentos.fraude.FraudeRepository;
-import br.com.zup.edu.desafiopagamentos.pagamentos.FormaDePagamento;
 import br.com.zup.edu.desafiopagamentos.pagamentos.request.FormasDePagamentoEmComumRequest;
 import br.com.zup.edu.desafiopagamentos.pagamentos.response.FormasDePagamentoResponse;
 import br.com.zup.edu.desafiopagamentos.restaurantes.Restaurante;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService {
@@ -29,9 +28,15 @@ public class ConsultarFormaDePagamentoDoUsuarioNoBancoDeDadosService {
         List<FormaDePagamento> formaDePagamentos = executorTransacional.executa(() -> {
             EntityManager manager = executorTransacional.getManager();
 
-            Usuario usuario = manager.find(Usuario.class, request.getIdUsuario());
+            Usuario usuario = manager.createQuery("select r from Usuario r join fetch r.formaDePagamentos where r.id=:id", Usuario.class)
+                    .setHint("org.hibernate.cacheable", true)
+                    .setParameter("id", request.getIdUsuario())
+                    .getSingleResult();
 
-            Restaurante restaurante = manager.find(Restaurante.class, request.getIdRestaurante());
+            Restaurante restaurante = manager.createQuery("select r from Restaurante r join fetch r.formaDePagamentos where r.id=:id", Restaurante.class)
+                    .setHint("org.hibernate.cacheable", true)
+                    .setParameter("id", request.getIdRestaurante())
+                    .getSingleResult();
 
             if (fraudeRepository.existsByEmail(usuario.getEmail())) {
                 return restaurante.meiosDePagamentoParaUsuarioSuspeitoFraude(usuario);

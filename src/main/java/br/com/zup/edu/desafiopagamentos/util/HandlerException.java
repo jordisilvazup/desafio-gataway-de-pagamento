@@ -28,4 +28,11 @@ public class HandlerException {
     public ResponseEntity<?> pagamentoNaoProcessado(PagamentoNaoProcessadoException e) {
         return ResponseEntity.status(402).build();
     }
+
+    @ExceptionHandler(feign.RetryableException.class)
+    public ResponseEntity<?> falhaNaConexao(){
+        ResponseError response = new ResponseError();
+        response.adicionarError("","Serviço indisponivel");
+        return ResponseEntity.badRequest().body(response);
+    }
 }
