@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class TangoClient implements GatewayClient{
     private RestTemplate template = GatewayClientFactory.getRestTemplate();
-    private String ENDERECO = "http://localhost:8080/api/tango/payment";
+    private String ENDERECO = "http://localhost:8082/api/tango/payment";
 
 
     public TentativaPagamentoResponse realizarPagamento(PaymentExternalRequest request) {

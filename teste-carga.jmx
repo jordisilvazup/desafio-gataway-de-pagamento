@@ -100,7 +100,7 @@
         <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Consultando forma de pagamento em comum entre Restaurante e Usuario" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Consultando forma de pagamento em comum entre Restaurante e Usuario" enabled="false">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -131,7 +131,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="idUser" enabled="true">
-            <stringProp name="maximumValue">10000</stringProp>
+            <stringProp name="maximumValue">100000</stringProp>
             <stringProp name="minimumValue">1</stringProp>
             <stringProp name="outputFormat"></stringProp>
             <boolProp name="perThread">false</boolProp>
@@ -143,7 +143,7 @@
             <stringProp name="variableName">idRest</stringProp>
             <stringProp name="outputFormat"></stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">10000</stringProp>
+            <stringProp name="maximumValue">100000</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">false</boolProp>
           </RandomVariableConfig>
@@ -210,9 +210,80 @@
           <hashTree/>
           <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Contador" enabled="true">
             <stringProp name="CounterConfig.start">1</stringProp>
-            <stringProp name="CounterConfig.end">1000000</stringProp>
+            <stringProp name="CounterConfig.end">500000</stringProp>
             <stringProp name="CounterConfig.incr">1</stringProp>
             <stringProp name="CounterConfig.name">idPedido</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Processando um pagamento online" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+	&quot;idPedido&quot;:${idPedido1},&#xd;
+	&quot;idRestaurante&quot;:${idRestaurante},&#xd;
+	&quot;idUsuario&quot;:${IdUsuario},&#xd;
+	&quot;idFormaPagamento&quot;:${idFormaPagamento2},&#xd;
+	&quot;cod_seguranca&quot;:&quot;123&quot;,&#xd;
+	&quot;num_cartao&quot;:&quot;123&quot;&#xd;
+&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/pagamentos</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="idFormaPagamento" enabled="true">
+            <stringProp name="variableName">idFormaPagamento2</stringProp>
+            <stringProp name="outputFormat"></stringProp>
+            <stringProp name="minimumValue">4</stringProp>
+            <stringProp name="maximumValue">5</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">false</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="IdUsuario" enabled="true">
+            <stringProp name="variableName">IdUsuario</stringProp>
+            <stringProp name="outputFormat"></stringProp>
+            <stringProp name="minimumValue">1</stringProp>
+            <stringProp name="maximumValue">10000</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">false</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="idRestaurante" enabled="true">
+            <stringProp name="variableName">idRestaurante</stringProp>
+            <stringProp name="outputFormat"></stringProp>
+            <stringProp name="minimumValue">1</stringProp>
+            <stringProp name="maximumValue">10000</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">false</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Contador1" enabled="true">
+            <stringProp name="CounterConfig.start">500001</stringProp>
+            <stringProp name="CounterConfig.end">1000000</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">idPedido1</stringProp>
             <stringProp name="CounterConfig.format"></stringProp>
             <boolProp name="CounterConfig.per_user">false</boolProp>
           </CounterConfig>

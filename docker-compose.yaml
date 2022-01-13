@@ -1,6 +1,15 @@
 version: '3'
 services:
-  postgres:
+
+  gatewaysfake:
+    container_name: 'gatewaysfakes'
+    image: 'jordihofc/gatewaysfakes'
+    ports:
+      - 8082:8083
+    environment:
+      DB_URL: jdbc:postgresql://postgres_gateways_fake/pedido
+  postgres_desafio:
+    container_name: 'BD_Principal'
     image: 'postgres:alpine'
     volumes:
       - postgres-volume:/var/lib/postgresql/data
@@ -9,18 +18,16 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: pagamento
-  jaeger:
-    image: jaegertracing/all-in-one
+  postgres_gateways_fake:
+    container_name: 'pedido'
+    image: 'postgres:alpine'
+    volumes:
+      - postgres_pedido-volume:/var/lib/postgresql/data
     ports:
-      - 5775:5775/udp
-      - 6831:6831/udp
-      - 6832:6832/udp
-      - 5778:5778
-      - 16686:16686
-      - 14268:14268
-      - 14250:14250
-      - 9411:9411
+      - 5433:5432
     environment:
-      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pedido
 volumes:
   postgres-volume:
+  postgres_pedido-volume:
